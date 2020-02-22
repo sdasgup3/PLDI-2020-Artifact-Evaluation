@@ -1,5 +1,5 @@
 ## Artifact Submission
- - Accepted Paper pdf
+ - Accepted Paper [pdf](https://github.com/sdasgup3/PLDI-2020-Artifact-Evaluation/blob/master/pldi2020-paper29.pdf)
  - VM Details
     - VM Player: VirtualBox 6.0.4 Or VirtualBox 5.1
     - Ubuntu Image: ova
