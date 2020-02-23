@@ -35,13 +35,13 @@ The [test directory](https://github.com/sdasgup3/validating-binary-decompilation
    - reloc_binary: To generate `binary/test.reloc`
    - mcsema: To generate `binary/test.mcsema.bc`,`binary/test.mcsema.inline.ll`, and `binary/test.mcsema.calls_renamed.ll`  
   - Doit (or Initrand/Rand/main/Try/Queens) (Artifacts related to individual functions of the `Queens`'s program, extracted using [wllvm](https://github.com/travitch/whole-program-llvm))
-   - mcsema/test.proposed.ll: The LLVM IR, corresponding to function `Doit`, generated using Compositional Lifter.
-   - mcsema/test.proposed.inlined.ll: Inlined version of `mcsema/test.proposed.ll`
-   - Makefile: With the following relevant targets
-     - compd: To generate `mcsema/test.proposed.inline.ll`
-     - compd_opt: To normalize `mcsema/test.proposed.inline.ll` using the [LLVM opt pass list](https://github.com/sdasgup3/validating-binary-decompilation/blob/master/tests/scripts/matcher_driver.sh#L15)
-     - mcsema_opt: To normalize `binary/test.mcsema.calls_renamed.ll` using the [LLVM opt pass list](https://github.com/sdasgup3/validating-binary-decompilation/blob/master/tests/scripts/matcher_driver.sh#L15)
-     - match: Check for graph-isomorphism on the data-dependence graphs of the above normalized versions.
+    - mcsema/test.proposed.ll: The LLVM IR, corresponding to function `Doit`, generated using Compositional Lifter.
+    - mcsema/test.proposed.inlined.ll: Inlined version of `mcsema/test.proposed.ll`
+    - Makefile: With the following relevant targets
+      - compd: To generate `mcsema/test.proposed.inline.ll`
+      - compd_opt: To normalize `mcsema/test.proposed.inline.ll` using the [LLVM opt pass list](https://github.com/sdasgup3/validating-binary-decompilation/blob/master/tests/scripts/matcher_driver.sh#L15)
+      - mcsema_opt: To normalize `binary/test.mcsema.calls_renamed.ll` using the [LLVM opt pass list](https://github.com/sdasgup3/validating-binary-decompilation/blob/master/tests/scripts/matcher_driver.sh#L15)
+      - match: Check for graph-isomorphism on the data-dependence graphs of the above normalized versions.
 
 
 
