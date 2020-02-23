@@ -38,10 +38,10 @@ The [test directory](https://github.com/sdasgup3/validating-binary-decompilation
     - mcsema/test.proposed.ll: The LLVM IR, corresponding to function `Doit`, generated using Compositional Lifter.
     - mcsema/test.proposed.inlined.ll: Inlined version of `mcsema/test.proposed.ll`
     - Makefile: With the following relevant targets
-      - compd: To generate `mcsema/test.proposed.inline.ll`
-      - compd_opt: To normalize `mcsema/test.proposed.inline.ll` using the [LLVM opt pass list](https://github.com/sdasgup3/validating-binary-decompilation/blob/master/tests/scripts/matcher_driver.sh#L15)
-      - mcsema_opt: To normalize `binary/test.mcsema.calls_renamed.ll` using the [LLVM opt pass list](https://github.com/sdasgup3/validating-binary-decompilation/blob/master/tests/scripts/matcher_driver.sh#L15)
-      - match: Check for graph-isomorphism on the data-dependence graphs of the above normalized versions.
+      - compd: Invoke Compositional Lifter to generate `mcsema/test.proposed.inline.ll`
+      - compd_opt: Invoke Normalizer to normalize `mcsema/test.proposed.inline.ll` using the [LLVM opt pass list](https://github.com/sdasgup3/validating-binary-decompilation/blob/master/tests/scripts/matcher_driver.sh#L15)
+      - mcsema_opt: Invoke Normalizer to normalize `binary/test.mcsema.calls_renamed.ll` using the [LLVM opt pass list](https://github.com/sdasgup3/validating-binary-decompilation/blob/master/tests/scripts/matcher_driver.sh#L15)
+      - match: Invoke Matcher to check for graph-isomorphism on the data-dependence graphs of the above normalized versions.
 
 **Please Note::** 
  1. We have pre-polulated the McSema lifted LLVM IR `<program name>/binary/test.mcsema.bc` because McSema needs a licensed disassembler `IDA` to generate this file, which is not provided because of some licensing issues.
