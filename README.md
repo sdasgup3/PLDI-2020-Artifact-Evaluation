@@ -22,7 +22,6 @@ The two major components of PLV are [Compositional Lifter](https://github.com/sd
 The [test directory](https://github.com/sdasgup3/validating-binary-decompilation/tree/master/tests/program_translation_validation/) contains test-suites like `toy-examples` and `single-source-benchmark`. The [single-source-benchmark](https://github.com/sdasgup3/validating-binary-decompilation/tree/master/tests/program_translation_validation/single-source-benchmark) contain folders for all the programs hosted by the test-suite. Each such program, for example the [Queens program](https://github.com/sdasgup3/validating-binary-decompilation/tree/master/tests/program_translation_validation/single-source-benchmark/Queens), has the following structure
 
  - Doit/Initrand/Rand/main/Try/Queens (Artifacts related to individual functions of the `Queens`'s program, extracted using [wllvm](https://github.com/travitch/whole-program-llvm))
-   - 
  - src (the source artifacts of the program)
    - test.ll/test.bc (Source llvm code of `Queens`'s program) 
  - binary
