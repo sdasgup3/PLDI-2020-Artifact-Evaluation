@@ -23,7 +23,7 @@ An important component of the SIV is the tool [spec-to-smt](https://github.com/s
 ### Testing arena for PLV
 The [test directory](https://github.com/sdasgup3/validating-binary-decompilation/tree/master/tests/single_instruction_translation_validation/mcsema/register-variants) contains contain a folder for each binary instruction. Each such instructions, for example the [addq_r64_r6](https://github.com/sdasgup3/validating-binary-decompilation/tree/master/tests/single_instruction_translation_validation/mcsema/register-variants/adcq_r64_r64), has the following structure:
 
- - `test.c`: A C file with the instruction `addq` wrapped in inline assembly.
+ - `test.c`: C file with the instruction `addq` wrapped in inline assembly.
  - `test`: Binary compiled from test.c
  - `test.s`: Assembly code for `test` 
  - `test.ll`: McSema lifted llvm ir
@@ -45,6 +45,17 @@ The [test directory](https://github.com/sdasgup3/validating-binary-decompilation
    - `genz3`: Invoke [spec-to-smt](https://github.com/sdasgup3/validating-binary-decompilation/blob/master/source/tools/spec-to-smt/spec-to-smt.cpp) to create `Output/test-z3.py` containing verification queries.
    - `provez3`: Invoke z3 on ``Output/test-z3.py.
    
+**Please Note** 
+  1. Similar files are available for other instructions.
+  2. We have pre-polulated the McSema lifted LLVM IR `<instruction opcode>/test.ll` because McSema is not included in the VM distribution.
+
+### Running the SIV pileline
+
+#### An example run
+Here we will elaborate the process of running SIV on an isolated example instruction `addq_r64_r64`. 
+Running SIV on it involves the following steps
+```
+```
 
 ## Program-Level validation (PLV)
 ### Source code
