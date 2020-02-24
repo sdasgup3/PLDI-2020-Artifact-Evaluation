@@ -56,9 +56,11 @@ The [test directory](https://github.com/sdasgup3/validating-binary-decompilation
 
 #### An example run
 Here we will elaborate the process of running PLV on an isolated example function `Queens/Doit/`. 
+We use shell variable NORM to specify which set of optimization passes to use for normalization. For example, the value `CUSTOM` enables using a [set of 17 LLVM opt passes](https://github.com/sdasgup3/validating-binary-decompilation/blob/master/tests/scripts/matcher_driver.sh#L16) for normalization. Other values are not relevant for the current submission. 
 
 Running PLV on it involves the following steps
 ```
+export NORM=CUSTOM
 cd ~/Github/validating-binary-decompilation/tests/program_translation_validation/single-source-benchmark/Queens/Doit/
 
 ## Runing Mcsema to lift the binary "../binary/test"
@@ -84,6 +86,7 @@ make match
 The make target `match` already includes the normalization actions of `compd_opt` & `mcsema_opt`, hence one can skip invocing the redundant targets. The reason we still have those targets are for legacy reasons and included in this presentation
 for better explanation of the steps. For example. instead of the above steps one can do
 ```
+export NORM=CUSTOM
 cd ~/Github/validating-binary-decompilation/tests/program_translation_validation/single-source-benchmark/Queens/Doit/
 make compd
 make match
@@ -96,6 +99,7 @@ includes function `himenobmtxpa/jacobi`, the biggest function we tried lifting b
 
 Running PLV in batch mode involves the following steps
 ```
+export NORM=CUSTOM
 cd ~/Github/validating-binary-decompilation/tests/program_translation_validation/single-source-benchmark/
 
 ## Running Compositional Lifter
