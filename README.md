@@ -65,6 +65,18 @@ make kli; make genlspec # Create spec-file for running sym-ex on LLVM ir sequenc
 make genz3 # Generate verification queries
 make provez3 # Dispatch verification queries to z3
 ```
+Similar steps need to be taken for other instructions.
+
+#### Reproducing bugs
+We provide the [list of bugs](https://github.com/sdasgup3/validating-binary-decompilation/tree/master/tests/single_instruction_translation_validation/mcsema/docs/AE_docs/bugs.txt). In order to show 
+that the result of Z3-comparison on the corresponding verification queries, do the following:
+```
+cd ~/Github/validating-binary-decompilation/tests/single_instruction_translation_validation/mcsema/
+cat docs/AE_docs/bugs.txt | parallel "cd {}; make provez3; cd -"
+```
+The above command which show, for each buggy instruction, which register has mismatching symbolic summaries.
+
+
 
 ## Program-Level validation (PLV)
 ### Source code
