@@ -38,6 +38,8 @@ The [test directory](https://github.com/sdasgup3/validating-binary-decompilation
    - `mcsema`: Lift `test` to `test.ll` using McSema.
    - `declutter`: Sanitize `test.ll` to `test.mod.ll`.
    - `genxspec`: Genearte the `test-xspec.k` file.
+   - `collect`: Prepare for building the symbolic execution engine using the semantics definitions of the binary instructions involed in `test`.
+   - `kompile`: Generate the symbolic execution engine for binary instruction. 
    - `kli`: Run concrete execution of `test.mod.ll` using the LLVM semantics. Output is stored in `Output/test-lstate.out`
    - `genlspec`: Genearte the `test-lspec.k` file using the concrete execution details from `Output/test-lstate.out`.
    - `lprove`: Invoke symbolic execution using the spec file `test-lspec.k`. Generates `Output/test-lspec.out` containing the symbolic summary for the llvm ir `test.mod.ll`.
@@ -55,6 +57,13 @@ The [test directory](https://github.com/sdasgup3/validating-binary-decompilation
 Here we will elaborate the process of running SIV on an isolated example instruction `addq_r64_r64`. 
 Running SIV on it involves the following steps
 ```
+cd ~/Github/validating-binary-decompilation/tests/single_instruction_translation_validation/mcsema/register-variants/addq_r64_r64
+make genxspec # Create spec-file for running sym-ex on binary instruction
+make collect; make kompile ; # Generate sym-ex engine 
+make xprove # Run symbolic execution
+make kli; make genlspec # Create spec-file for running sym-ex on LLVM ir sequence
+make genz3 # Generate verification queries
+make provez3 # Dispatch verification queries to z3
 ```
 
 ## Program-Level validation (PLV)
