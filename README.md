@@ -103,5 +103,5 @@ cat docs/AE_docs/samplePassList.txt | parallel "cd {}; make  compd; cd - "
 cat docs/AE_docs/samplePassList.txt | parallel "cd {}; make  match - "
 ```
 **Please Note**
-We have provoded the list of `2189` passing cases `~Github/validating-binary-decompilation/tests/program_translation_validation/single-source-benchmark/docs/AE_docs/matcherPassList.txt`, which can 
+We have provoded the list of `2189` passing cases `~/Github/validating-binary-decompilation/tests/program_translation_validation/single-source-benchmark/docs/AE_docs/matcherPassList.txt`, which can 
 be run using either batch mode or individually.
