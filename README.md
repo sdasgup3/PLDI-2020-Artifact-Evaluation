@@ -20,15 +20,14 @@
 ### Source code
 An important component of the SIV is the tool [spec-to-smt](https://github.com/sdasgup3/validating-binary-decompilation/blob/master/source/tools/spec-to-smt/spec-to-smt.cpp), which converts the symbolic summary (specified in K-AST) to SMTLIB queries, with the core functionality defined in [library](https://github.com/sdasgup3/validating-binary-decompilation/blob/master/source/libs/smt-generator/smt-generator.cpp).
 
-### Testing arena for PLV
+### Testing arena for SIV
 The [test directory](https://github.com/sdasgup3/validating-binary-decompilation/tree/master/tests/single_instruction_translation_validation/mcsema/register-variants) contains contain a folder for each binary instruction. Each such instructions, for example the [addq_r64_r6](https://github.com/sdasgup3/validating-binary-decompilation/tree/master/tests/single_instruction_translation_validation/mcsema/register-variants/adcq_r64_r64), has the following structure:
 
- - `test.c`: C file with the instruction `addq` wrapped in inline assembly.
- - `test`: Binary compiled from test.c
- - `test.s`: Assembly code for `test` 
- - `test.ll`: McSema lifted llvm ir
- - `test.mod.ll`: Declutted version of `test.ll` focussing on just the IR revelant to the lifting of `addq`
- - `test-xspec.k`: The K-specification file necessary for running a symbolic execution engine `krpove` (a tool that K-fraework generates automatically from the semantics of X86-64 ISA) on binary instrution and generating symbolic summary.
+ - `test.c`: C file with an instruction instance of `addq` wrapped in inline assembly.
+ - `test`: Binary compiled from above C file. 
+ - `test.ll`: McSema lifted LLVM IR from binary `test`.
+ - `test.mod.ll`: McSema lifts a lot af glue code other than the instructions in `test`. This is declutted version of `test.ll` focussing on just the IR revelant to the lifting of `addq` instrction.
+ - `test-xspec.k`: The K-specification file necessary for running a symbolic execution engine `krpove` (a tool that K-fraework generates automatically from the semantics of X86-64 ISA) on binary instruction and generating symbolic summary.
  - `Output/test-xspec.out`: Output of the above symbolic excution.
  - `test-lspec.k`: The K-specification file necessary for running another symbolic execution engine `kprove` (a tool that K-fraework generates automatically from the semantics of LLVM IR) on `test.mod.ll` and generating symbolic summary.
  - `Output/test-lspec.out`: Output of the above symbolic excution.
@@ -38,10 +37,10 @@ The [test directory](https://github.com/sdasgup3/validating-binary-decompilation
    - `mcsema`: Lift `test` to `test.ll` using McSema.
    - `declutter`: Sanitize `test.ll` to `test.mod.ll`.
    - `genxspec`: Genearte the `test-xspec.k` file.
-   - `collect`: Prepare for building the symbolic execution engine using the semantics definitions of the binary instructions involed in `test`.
-   - `kompile`: Generate the symbolic execution engine for binary instruction. 
+   - `collect`: Prepare for building the symbolic execution engine using the semantics definitions of the binary instructions included in `test`.
+   - `kompile`: Generate the symbolic execution engine for binary instructions included in `test`. 
    - `kli`: Run concrete execution of `test.mod.ll` using the LLVM semantics. Output is stored in `Output/test-lstate.out`
-   - `genlspec`: Genearte the `test-lspec.k` file using the concrete execution details from `Output/test-lstate.out`.
+   - `genlspec`: Generate the `test-lspec.k` file using many details from the concrete execution log `Output/test-lstate.out`.
    - `lprove`: Invoke symbolic execution using the spec file `test-lspec.k`. Generates `Output/test-lspec.out` containing the symbolic summary for the llvm ir `test.mod.ll`.
    - `xprove`: Invoke symbolic execution using the spec file `test-xspec.k`. Generates `Output/test-xspec.out` containing the symbolic summary for the binary instruction `addq`.
    - `genz3`: Invoke [spec-to-smt](https://github.com/sdasgup3/validating-binary-decompilation/blob/master/source/tools/spec-to-smt/spec-to-smt.cpp) to create `Output/test-z3.py` containing verification queries.
@@ -51,15 +50,16 @@ The [test directory](https://github.com/sdasgup3/validating-binary-decompilation
   1. Similar files are available for other instructions.
   2. We have pre-polulated the McSema lifted LLVM IR `<instruction opcode>/test.ll` because McSema is not included in the VM distribution.
 
-### Running the SIV pileline
+### Running the SIV pipeline
 
 #### An example run
-Here we will elaborate the process of running SIV on an isolated example instruction `addq_r64_r64`. 
-Running SIV on it involves the following step
+HRunning SIV on an isolated example instruction `addq_r64_r64` involves the following step
 ```
 ~/Github/validating-binary-decompilation/tests/single_instruction_translation_validation/mcsema/docs/AE_docs/run_standalone.sh register-variants/addq_r64_r64
 ```
+A list of other instructions is available at [1]. In other to run them, replace the argument `register-variants/addq_r64_r64` with an entry in that list. 
 
+### Details about SIV pipeline
 The above script runs the fillowing pipeline
 ```
 PROG=$1
@@ -73,7 +73,30 @@ make genz3 # Generate verification queries
 make provez3 # Dispatch verification queries to z3
 cd -
 ```
-Similar steps need to be taken for other instructions.
+
+One of the most interesting step is `make provez3`, responsible for running z3 on the verification queries encoded in `Output/test-z3.py` [an example](https://github.com/sdasgup3/validating-binary-decompilation/blob/master/tests/single_instruction_translation_validation/mcsema/register-variants/adcq_r64_r64/Output/test-z3.py). The python file has the following format:
+```
+s = z3.solver()
+For each E in {registers, flags, memory values}:
+ s.push()
+
+ lvar = symbolic summary corresponding to flag F, obtained by sym-execution of the LLVM IR (generated by McSema by lifting the binary instruction.  
+ xvar = symbolic summary corresponding to flag F, obtained by sym-execution the binary instruction.
+
+ s.add(lvar != xvar)
+
+ solve s for unsat/sat/timeout
+
+ s.pop()
+
+```
+The verifications queries, for each register/flag/memory value, are dispatched upon the make target `make provez3`. The output `Test-Pass` is generated if all the queries results in `unsat`. Coversely, the output says `Test-Fail` if any of query results in `sat or timeout`.
+
+In order to run this prover step for all the non-buggy instructions, do the following:
+```
+cd ~/Github/validating-binary-decompilation/tests/single_instruction_translation_validation/mcsema/$PROG
+cat docs/AE_docs/non-bugs.txt | parallel "echo {}; echo ===; cd {}; make provez3; cd -" |& tee ~/Junk/log 
+```
 
 #### Reproducing bugs
 We provide the [list of bugs](https://github.com/sdasgup3/validating-binary-decompilation/tree/master/tests/single_instruction_translation_validation/mcsema/docs/AE_docs/bugs.txt). In order to show 
