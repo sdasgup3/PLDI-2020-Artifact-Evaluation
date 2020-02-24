@@ -22,26 +22,26 @@ The two major components of PLV are [Compositional Lifter](https://github.com/sd
 The [test directory](https://github.com/sdasgup3/validating-binary-decompilation/tree/master/tests/program_translation_validation/) contains test-suites like `toy-examples` and `single-source-benchmark`. The [single-source-benchmark](https://github.com/sdasgup3/validating-binary-decompilation/tree/master/tests/program_translation_validation/single-source-benchmark) contain folders for all the programs hosted by the test-suite. Each such program, for example the [Queens program](https://github.com/sdasgup3/validating-binary-decompilation/tree/master/tests/program_translation_validation/single-source-benchmark/Queens), has the following structure
 
 
- - src (the source artifacts of the program)
-   - test.ll/test.bc (Source llvm code of `Queens`'s program) 
+ - `src` (the source artifacts of the program)
+   - `test.ll/test.bc` (Source llvm code of `Queens`'s program) 
  - binary
-   - test: Binary compiled from src/test.bc
-   - test.mcsema.bc: McSema lifted LLVM IR from `binary/test`
-   - test.mcsema.inline.ll: Inlined version of `binary/test.mcsema.bc`
-   - test.mcsema.calls_renamed.ll: Version of `binary/test.mcsema.inline.ll` with function calls renamed so as to prevent inter-procedural optimization during normalization [1]  
-   - test.reloc: Binary compiled from src/test.bc with relocation information preserved
- - Makefile: With the following relevant targets
-   - binary: To generate `binary/test`
-   - reloc_binary: To generate `binary/test.reloc`
-   - mcsema: To generate `binary/test.mcsema.bc`,`binary/test.mcsema.inline.ll`, and `binary/test.mcsema.calls_renamed.ll`  
-  - Doit (or Initrand/Rand/main/Try/Queens) (Artifacts related to individual functions of the `Queens`'s program, extracted using [wllvm](https://github.com/travitch/whole-program-llvm))
-    - mcsema/test.proposed.ll: The LLVM IR, corresponding to function `Doit`, generated using Compositional Lifter.
-    - mcsema/test.proposed.inlined.ll: Inlined version of `mcsema/test.proposed.ll`
-    - Makefile: With the following relevant targets
-      - compd: Invoke Compositional Lifter to generate `mcsema/test.proposed.inline.ll`
-      - compd_opt: Invoke Normalizer to normalize `mcsema/test.proposed.inline.ll` using the [LLVM opt pass list](https://github.com/sdasgup3/validating-binary-decompilation/blob/master/tests/scripts/matcher_driver.sh#L15)
-      - mcsema_opt: Invoke Normalizer to normalize `binary/test.mcsema.calls_renamed.ll` using the [LLVM opt pass list](https://github.com/sdasgup3/validating-binary-decompilation/blob/master/tests/scripts/matcher_driver.sh#L15)
-      - match: Invoke Matcher to check for graph-isomorphism on the data-dependence graphs of the above normalized versions.
+   - `test`: Binary compiled from src/test.bc
+   - `test.mcsema.bc`: McSema lifted LLVM IR from `binary/test`
+   - `test.mcsema.inline.ll`: Inlined version of `binary/test.mcsema.bc`
+   - `test.mcsema.calls_renamed.ll`: Version of `binary/test.mcsema.inline.ll` with function calls renamed so as to prevent inter-procedural optimization during normalization [1]  
+   - `test.reloc`: Binary compiled from src/test.bc with relocation information preserved
+ - `Makefile`: With the following relevant targets
+   - `binary`: To generate `binary/test`
+   - `reloc_binary`: To generate `binary/test.reloc`
+   - `mcsema`: To generate `binary/test.mcsema.bc`,`binary/test.mcsema.inline.ll`, and `binary/test.mcsema.calls_renamed.ll`  
+  - `Doit (or Initrand/Rand/main/Try/Queens)` (Artifacts related to individual functions of the `Queens`'s program, extracted using [wllvm](https://github.com/travitch/whole-program-llvm))
+    - `mcsema/test.proposed.ll`: The LLVM IR, corresponding to function `Doit`, generated using Compositional Lifter.
+    - `mcsema/test.proposed.inlined.ll`: Inlined version of `mcsema/test.proposed.ll`
+    - `Makefile`: With the following relevant targets
+      - `compd`: Invoke Compositional Lifter to generate `mcsema/test.proposed.inline.ll`
+      - `compd_opt`: Invoke Normalizer to normalize `mcsema/test.proposed.inline.ll` using the [LLVM opt pass list](https://github.com/sdasgup3/validating-binary-decompilation/blob/master/tests/scripts/matcher_driver.sh#L15)
+      - `mcsema_opt`: Invoke Normalizer to normalize `binary/test.mcsema.calls_renamed.ll` using the [LLVM opt pass list](https://github.com/sdasgup3/validating-binary-decompilation/blob/master/tests/scripts/matcher_driver.sh#L15)
+      - `match`: Invoke Matcher to check for graph-isomorphism on the data-dependence graphs of the above normalized versions.
 
 **Please Note::** 
  1. We have pre-polulated the McSema lifted LLVM IR `<program name>/binary/test.mcsema.bc` because McSema needs a licensed disassembler `IDA` to generate this file, which is not provided because of some licensing issues.
