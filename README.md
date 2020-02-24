@@ -9,7 +9,7 @@
     - Guest Machine requirements
       - Minimum 8 GB of RAM.
       - Recommended number of processors is 4 to allow parallel experiments.
-  - We have also included the current repo in the VM disk, so that one can access this README.md file at `~/Github/PLDI20-Artifact-Evaluation/README.md`. Tis is just in case the bidirectional shared clipboard does not work on the VirtualBox.
+  - We have also included the current repo in the VM disk, so that one can access this README.md file at `~/Github/PLDI20-Artifact-Evaluation/README.md`. This is just in case the bidirectional shared clipboard does not work on the VirtualBox.
   
 **Troubleshoot**: 
 1. For a Ubuntu host machine with Secure Boot enabled, the presented VirtualBox image may fail to be loaded. In that case, you can either disable the Secure Boot, or sign the VirtualBox module as described [here](https://askubuntu.com/questions/900118/vboxdrv-sh-failed-modprobe-vboxdrv-failed-please-use-dmesg-to-find-out-why/900121#900121).
@@ -26,11 +26,11 @@ The [test directory](https://github.com/sdasgup3/validating-binary-decompilation
  - `test.c`: C file with an instruction instance of `addq` wrapped in inline assembly.
  - `test`: Binary compiled from above C file. 
  - `test.ll`: McSema lifted LLVM IR from binary `test`.
- - `test.mod.ll`: McSema lifts a lot af glue code other than the instructions in `test`. This is declutted version of `test.ll` focussing on just the IR revelant to the lifting of `addq` instrction.
- - `test-xspec.k`: The K-specification file necessary for running a symbolic execution engine `krpove` (a tool that K-fraework generates automatically from the semantics of X86-64 ISA) on binary instruction and generating symbolic summary.
- - `Output/test-xspec.out`: Output of the above symbolic excution.
- - `test-lspec.k`: The K-specification file necessary for running another symbolic execution engine `kprove` (a tool that K-fraework generates automatically from the semantics of LLVM IR) on `test.mod.ll` and generating symbolic summary.
- - `Output/test-lspec.out`: Output of the above symbolic excution.
+ - `test.mod.ll`: McSema lifts a lot af glue code other than the instructions in `test`. This is de-cluttered version of `test.ll` focusing on just the IR relevant to the lifting of `addq` instruction.
+ - `test-xspec.k`: The K-specification file necessary for running a symbolic execution engine `krpove` (a tool that K-framework generates automatically from the semantics of X86-64 ISA) on binary instruction and generating symbolic summary.
+ - `Output/test-xspec.out`: Output of the above symbolic execution.
+ - `test-lspec.k`: The K-specification file necessary for running another symbolic execution engine `kprove` (a tool that K-framework generates automatically from the semantics of LLVM IR) on `test.mod.ll` and generating symbolic summary.
+ - `Output/test-lspec.out`: Output of the above symbolic execution.
  - `Output/test-z3.py`: The python file encoding the verification queries in SMTLIB format. The queries are created using the tool [spec-to-smt](https://github.com/sdasgup3/validating-binary-decompilation/blob/master/source/tools/spec-to-smt/spec-to-smt.cpp) by processing the symbolic summaries in  `Output/test-xspec.out` and `Output/test-lspec.out`.
  - `Makefile`: With the following relevant targets
    - `binary`: Generate `test` from `test.c`.
@@ -41,26 +41,26 @@ The [test directory](https://github.com/sdasgup3/validating-binary-decompilation
    - `kompile`: Generate the symbolic execution engine for binary instructions included in `test`. 
    - `kli`: Run concrete execution of `test.mod.ll` using the LLVM semantics. Output is stored in `Output/test-lstate.out`
    - `genlspec`: Generate the `test-lspec.k` file using many details from the concrete execution log `Output/test-lstate.out`.
-   - `lprove`: Invoke symbolic execution using the spec file `test-lspec.k`. Generates `Output/test-lspec.out` containing the symbolic summary for the llvm ir `test.mod.ll`.
+   - `lprove`: Invoke symbolic execution using the spec file `test-lspec.k`. Generates `Output/test-lspec.out` containing the symbolic summary for the LLVM ir `test.mod.ll`.
    - `xprove`: Invoke symbolic execution using the spec file `test-xspec.k`. Generates `Output/test-xspec.out` containing the symbolic summary for the binary instruction `addq`.
    - `genz3`: Invoke [spec-to-smt](https://github.com/sdasgup3/validating-binary-decompilation/blob/master/source/tools/spec-to-smt/spec-to-smt.cpp) to create `Output/test-z3.py` containing verification queries.
    - `provez3`: Invoke z3 on ``Output/test-z3.py.
    
 **Please Note** 
   1. Similar files are available for other instructions.
-  2. We have pre-polulated the McSema lifted LLVM IR `<instruction opcode>/test.ll` because McSema is not included in the VM distribution.
+  2. We have pre-populated the McSema lifted LLVM IR `<instruction opcode>/test.ll` because McSema is not included in the VM distribution.
 
 ### Running the SIV pipeline
 
 #### An example run
-HRunning SIV on an isolated example instruction `addq_r64_r64` involves the following step
+Running SIV on an isolated example instruction `addq_r64_r64` involves the following step
 ```
 ~/Github/validating-binary-decompilation/tests/single_instruction_translation_validation/mcsema/docs/AE_docs/run_standalone.sh register-variants/addq_r64_r64
 ```
 A list of other instructions is available at [1]. In other to run them, replace the argument `register-variants/addq_r64_r64` with an entry in that list. 
 
 ### Details about SIV pipeline
-The above script runs the fillowing pipeline
+The above script runs the following pipeline
 ```
 PROG=$1
 cd ~/Github/validating-binary-decompilation/tests/single_instruction_translation_validation/mcsema/$PROG
@@ -90,7 +90,7 @@ For each E in {registers, flags, memory values}:
  s.pop()
 
 ```
-The verifications queries, for each register/flag/memory value, are dispatched upon the make target `make provez3`. The output `Test-Pass` is generated if all the queries results in `unsat`. Coversely, the output says `Test-Fail` if any of query results in `sat or timeout`.
+The verification queries, for each register/flag/memory value, are dispatched upon the make target `make provez3`. The output `Test-Pass` is generated if all the queries results in `unsat`. Conversely, the output says `Test-Fail` if any of query results in `sat or timeout`.
 
 In order to run this prover step for all the non-buggy instructions, do the following:
 ```
@@ -120,7 +120,7 @@ The [test directory](https://github.com/sdasgup3/validating-binary-decompilation
 
 
  - `src` (the source artifacts of the program)
-   - `test.ll/test.bc` (Source llvm code of `Queens`'s program) 
+   - `test.ll/test.bc` (Source LLVM code of `Queens`'s program) 
  - binary
    - `test`: Binary compiled from src/test.bc
    - `test.mcsema.bc`: McSema lifted LLVM IR from `binary/test`
@@ -141,10 +141,10 @@ The [test directory](https://github.com/sdasgup3/validating-binary-decompilation
       - `match`: Invoke Matcher to check for graph-isomorphism on the data-dependence graphs of the above normalized versions.
 
 **Please Note** 
- 1. We have pre-polulated the McSema lifted LLVM IR `<program name>/binary/test.mcsema.bc` because McSema needs a licensed disassembler `IDA` to generate this file, which is not provided because of some licensing issues.
+ 1. We have pre-populated the McSema lifted LLVM IR `<program name>/binary/test.mcsema.bc` because McSema needs a licensed disassembler `IDA` to generate this file, which is not provided because of some licensing issues.
  2. The [_Store_](https://github.com/sdasgup3/compd_cache) has the validated IR sequences of individual binary instructions,  generated using McSema. As a result, we have packaged the entire _Store_ in the VM, so that the reviewer do not have to run McSema. 
  
-### Running the PLV pileline
+### Running the PLV pipeline
 
 #### An example run
 Here we will elaborate the process of running PLV on an isolated example function `Queens/Doit/`. 
@@ -155,8 +155,8 @@ Running PLV on it involves the following steps
 export NORM=CUSTOM
 cd ~/Github/validating-binary-decompilation/tests/program_translation_validation/single-source-benchmark/Queens/Doit/
 
-## Runing Mcsema to lift the binary "../binary/test"
-## Cretaes  "../binary/test.mcsema.inline.ll"
+## Running Mcsema to lift the binary "../binary/test"
+## Creates  "../binary/test.mcsema.inline.ll"
 # make mcsema // Skip  this steps as it requires running mcsema + IDA.
 
 ## Running Compositional lifter on the corresponding binary ../binary/test.reloc
@@ -175,7 +175,7 @@ make mcsema_opt
 make match
 ```
 **Please Note**
-The make target `match` already includes the normalization actions of `compd_opt` & `mcsema_opt`, hence one can skip invocing the redundant targets. The reason we still have those targets are for legacy reasons and included in this presentation
+The make target `match` already includes the normalization actions of `compd_opt` & `mcsema_opt`, hence one can skip invoking the redundant targets. The reason we still have those targets are for legacy reasons and included in this presentation
 for better explanation of the steps. For example. instead of the above steps one can do
 ```
 export NORM=CUSTOM
@@ -201,5 +201,5 @@ cat docs/AE_docs/samplePassList.txt | parallel "cd {}; make  compd; cd - "
 cat docs/AE_docs/samplePassList.txt | parallel "cd {}; make  match - "
 ```
 **Please Note**
-We have provoded the list of `2189` passing cases `~/Github/validating-binary-decompilation/tests/program_translation_validation/single-source-benchmark/docs/AE_docs/matcherPassList.txt`, which can 
+We have provided the list of `2189` passing cases `~/Github/validating-binary-decompilation/tests/program_translation_validation/single-source-benchmark/docs/AE_docs/matcherPassList.txt`, which can 
 be run using either batch mode or individually.
