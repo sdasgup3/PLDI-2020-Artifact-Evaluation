@@ -16,15 +16,44 @@
 2. [VM bot up with black login screen](https://askubuntu.com/questions/1134892/ubuntu-18-04-lts-on-virtualbox-boots-up-but-black-login-screen)
 3. Virtualbox `Error ID: BLKCACHE_IOERR`: In the VB client, Storage » SATA Controlle" Use the cache I/O host (all other values are those used by default VirtualBox))
 
+## Single-Instruction validation (SIV)
+### Source code
+An important component of the SIV is the tool [spec-to-smt](https://github.com/sdasgup3/validating-binary-decompilation/blob/master/source/tools/spec-to-smt/spec-to-smt.cpp), which converts the symbolic summary (specified in K-AST) to SMTLIB queries, with the core functionality defined in [library](https://github.com/sdasgup3/validating-binary-decompilation/blob/master/source/libs/smt-generator/smt-generator.cpp).
+
+### Testing arena for PLV
+The [test directory](https://github.com/sdasgup3/validating-binary-decompilation/tree/master/tests/single_instruction_translation_validation/mcsema/register-variants) contains contain a folder for each binary instruction. Each such instructions, for example the [addq_r64_r6](https://github.com/sdasgup3/validating-binary-decompilation/tree/master/tests/single_instruction_translation_validation/mcsema/register-variants/adcq_r64_r64), has the following structure:
+
+ - `test.c`: A C file with the instruction `addq` wrapped in inline assembly.
+ - `test`: Binary compiled from test.c
+ - `test.s`: Assembly code for `test` 
+ - `test.ll`: McSema lifted llvm ir
+ - `test.mod.ll`: Declutted version of `test.ll` focussing on just the IR revelant to the lifting of `addq`
+ - `test-xspec.k`: The K-specification file necessary for running a symbolic execution engine `krpove` (a tool that K-fraework generates automatically from the semantics of X86-64 ISA) on binary instrution and generating symbolic summary.
+ - `Output/test-xspec.out`: Output of the above symbolic excution.
+ - `test-lspec.k`: The K-specification file necessary for running another symbolic execution engine `kprove` (a tool that K-fraework generates automatically from the semantics of LLVM IR) on `test.mod.ll` and generating symbolic summary.
+ - `Output/test-lspec.out`: Output of the above symbolic excution.
+ - `Output/test-z3.py`: The python file encoding the verification queries in SMTLIB format. The queries are created using the tool [spec-to-smt](https://github.com/sdasgup3/validating-binary-decompilation/blob/master/source/tools/spec-to-smt/spec-to-smt.cpp) by processing the symbolic summaries in  `Output/test-xspec.out` and `Output/test-lspec.out`.
+ - `Makefile`: With the following relevant targets
+   - `binary`: Generate `test` from `test.c`.
+   - `mcsema`: Lift `test` to `test.ll` using McSema.
+   - `declutter`: Sanitize `test.ll` to `test.mod.ll`.
+   - `genxspec`: Genearte the `test-xspec.k` file.
+   - `kli`: Run concrete execution of `test.mod.ll` using the LLVM semantics. Output is stored in `Output/test-lstate.out`
+   - `genlspec`: Genearte the `test-lspec.k` file using the concrete execution details from `Output/test-lstate.out`.
+   - `lprove`: Invoke symbolic execution using the spec file `test-lspec.k`. Generates `Output/test-lspec.out` containing the symbolic summary for the llvm ir `test.mod.ll`.
+   - `xprove`: Invoke symbolic execution using the spec file `test-xspec.k`. Generates `Output/test-xspec.out` containing the symbolic summary for the binary instruction `addq`.
+   - `genz3`: Invoke [spec-to-smt](https://github.com/sdasgup3/validating-binary-decompilation/blob/master/source/tools/spec-to-smt/spec-to-smt.cpp) to create `Output/test-z3.py` containing verification queries.
+   - `provez3`: Invoke z3 on ``Output/test-z3.py.
+   
 
 ## Program-Level validation (PLV)
-### Source Code
+### Source code
 
 The two major components of PLV are [Compositional Lifter](https://github.com/sdasgup3/validating-binary-decompilation/blob/master/source/tools/decompiler/decompiler.cpp), with the core logic defined in [library](https://github.com/sdasgup3/validating-binary-decompilation/blob/master/source/libs/compositional-decompiler/compositional-decompiler.cpp) and [matcher](https://github.com/sdasgup3/validating-binary-decompilation/blob/master/source/tools/matcher/matcher.cpp), with the core logic defined in [library](https://github.com/sdasgup3/validating-binary-decompilation/blob/master/source/libs/llvm-graph-matching/llvm-graph-matching.cpp). Additionally, Compositional Lifter uses a [_Store_](https://github.com/sdasgup3/compd_cache) of formally validated instructions to stitch the validated LLVM IR sequence of constituent instructions in a binary program.
 
-### Testing Arena for PLV
+### Testing arena for PLV
 
-The [test directory](https://github.com/sdasgup3/validating-binary-decompilation/tree/master/tests/program_translation_validation/) contains test-suites like `toy-examples` and `single-source-benchmark`. The [single-source-benchmark](https://github.com/sdasgup3/validating-binary-decompilation/tree/master/tests/program_translation_validation/single-source-benchmark) contain folders for all the programs hosted by the test-suite. Each such program, for example the [Queens program](https://github.com/sdasgup3/validating-binary-decompilation/tree/master/tests/program_translation_validation/single-source-benchmark/Queens), has the following structure
+The [test directory](https://github.com/sdasgup3/validating-binary-decompilation/tree/master/tests/program_translation_validation/) contains test-suites like `toy-examples` and `single-source-benchmark`. The [single-source-benchmark](https://github.com/sdasgup3/validating-binary-decompilation/tree/master/tests/program_translation_validation/single-source-benchmark) contain folders for all the programs hosted by the test-suite. Each such program, for example the [Queens program](https://github.com/sdasgup3/validating-binary-decompilation/tree/master/tests/program_translation_validation/single-source-benchmark/Queens), has the following structure:
 
 
  - `src` (the source artifacts of the program)
