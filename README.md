@@ -87,7 +87,7 @@ make match
  
 ### Batch run
 To demonstrate a batch run, we have included a list of sample functions in a list `~/Github/validating-binary-decompilation/tests/program_translation_validation/single-source-benchmark/docs/AE_docs/samplePassList.txt`. The list also
-includes function `himenobmtxpa/jacobi`, wherein the size of the extracted LLVM IR, using the Compositional Lifter, is `32105` LOC.
+includes function `himenobmtxpa/jacobi`, the biggest function we tried lifting before submission, wherein the size of the extracted LLVM IR, using the Compositional Lifter, is `32105` LOC.
 
 Running PLV in batch mode involves the following steps
 ```
