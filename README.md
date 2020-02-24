@@ -64,6 +64,7 @@ The above script runs the fillowing pipeline
 ```
 PROG=$1
 cd ~/Github/validating-binary-decompilation/tests/single_instruction_translation_validation/mcsema/$PROG
+make declutter # Sanitize the McSema lifter IR, test.ll
 make genxspec # Create spec-file for running sym-ex on binary instruction
 make collect; make kompile ; # Generate sym-ex engine 
 make xprove # Run symbolic execution
