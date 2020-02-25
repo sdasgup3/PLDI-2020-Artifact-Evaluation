@@ -186,7 +186,7 @@ For each E in {registers, flags, memory values}:
 ```
 The verification queries, for each register/flag/memory value, are dispatched upon the make target `make provez3`. The output `Test-Pass` is generated if all the queries results in `unsat`. Conversely, the output says `Test-Fail` if any of query results in `sat or timeout`.
 
-In order to run this prover step for a sample of [non-buggy instructions](https://github.com/sdasgup3/validating-binary-decompilation/tree/master/tests/single_instruction_translation_validation/mcsema/docs/AE_docs/sample-non-bugs.txt), do the following:
+In order to run this prover step on a sample of [non-buggy instructions](https://github.com/sdasgup3/validating-binary-decompilation/tree/master/tests/single_instruction_translation_validation/mcsema/docs/AE_docs/sample-non-bugs.txt), do the following:
 ```
 cd ~/Github/validating-binary-decompilation/tests/single_instruction_translation_validation/mcsema/$PROG
 cat docs/AE_docs/non-bugs.txt | parallel "echo {}; echo ===; cd {}; make provez3; cd -" |& tee ~/Junk/log 
