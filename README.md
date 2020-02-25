@@ -115,8 +115,8 @@ be run using either batch mode or individually.
 ### Source code
 An important component of the SIV is the tool [spec-to-smt](https://github.com/sdasgup3/validating-binary-decompilation/blob/master/source/tools/spec-to-smt/spec-to-smt.cpp), which converts the symbolic summary (specified in K-AST) to SMTLIB queries, with the core functionality defined in [library](https://github.com/sdasgup3/validating-binary-decompilation/blob/master/source/libs/smt-generator/smt-generator.cpp).
 
-### Testing arena for SIV
-The [test directory](https://github.com/sdasgup3/validating-binary-decompilation/tree/master/tests/single_instruction_translation_validation/mcsema/register-variants) contains contain a folder for each binary instruction. Each such instructions, for example the [addq_r64_r64](https://github.com/sdasgup3/validating-binary-decompilation/tree/master/tests/single_instruction_translation_validation/mcsema/register-variants/adcq_r64_r64), has the following structure:
+### Testing for SIV
+For each binary instruction, for example the [addq_r64_r64](https://github.com/sdasgup3/validating-binary-decompilation/tree/master/tests/single_instruction_translation_validation/mcsema/register-variants/adcq_r64_r64), has the following structure:
 
  - `test.c`: C file with an instruction instance of `addq` wrapped in inline assembly.
  - `test`: Binary compiled from above C file. 
@@ -152,7 +152,6 @@ Running SIV on an isolated example instruction `addq_r64_r64` involves the follo
 ```
 ~/Github/validating-binary-decompilation/tests/single_instruction_translation_validation/mcsema/docs/AE_docs/run_standalone.sh register-variants/addq_r64_r64
 ```
-A list of other instructions is available at [1]. In other to run them, replace the argument `register-variants/addq_r64_r64` with an entry in that list. 
 
 ### Details about SIV pipeline
 The above script runs the following pipeline
@@ -187,7 +186,7 @@ For each E in {registers, flags, memory values}:
 ```
 The verification queries, for each register/flag/memory value, are dispatched upon the make target `make provez3`. The output `Test-Pass` is generated if all the queries results in `unsat`. Conversely, the output says `Test-Fail` if any of query results in `sat or timeout`.
 
-In order to run this prover step for all the non-buggy instructions, do the following:
+In order to run this prover step for a sample of [non-buggy instructions](https://github.com/sdasgup3/validating-binary-decompilation/tree/master/tests/single_instruction_translation_validation/mcsema/docs/AE_docs/sample-non-bugs.txt), do the following:
 ```
 cd ~/Github/validating-binary-decompilation/tests/single_instruction_translation_validation/mcsema/$PROG
 cat docs/AE_docs/non-bugs.txt | parallel "echo {}; echo ===; cd {}; make provez3; cd -" |& tee ~/Junk/log 
