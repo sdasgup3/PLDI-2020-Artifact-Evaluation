@@ -207,7 +207,7 @@ cd ~/Github/validating-binary-decompilation/tests/single_instruction_translation
 cat docs/AE_docs/same-reg-bugs.txt | parallel "cd {}; make provez3; cd -"
 ```
 
-Bug Reports to McSema can be found [here](https://github.com/lifting-bits/remill/issues/376), which are all acknoledged. 
+Bug Reports to McSema can be found [here](https://github.com/lifting-bits/remill/issues/376), which are all acknowledged. 
 
 #### Reproducing timeouts
 We found that [timeouts]((https://github.com/sdasgup3/validating-binary-decompilation/tree/master/tests/single_instruction_translation_validation/mcsema/docs/AE_docs/flaky_TO.txt)) (related to paddb, psubb) are flaky: the Z3 solver results toggled between unknown and unsat depending on the order in which other unrelated constraints are added (a known z3 issue: https://github.com/Z3Prover/z3/issues/1106). By removing the unrelated constraints, z3 concludes them to be equivalent. For example, for the above flaky cases, the current version of `test-z3.py` has the unrelated constraints commented-in (and marked with `REMOVE: START` and `REMOVE: END` tags). Hence, following the steps will them all of them pass
