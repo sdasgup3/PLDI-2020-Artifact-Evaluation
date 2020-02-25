@@ -2,7 +2,7 @@
  - Accepted Paper [pdf](https://github.com/sdasgup3/PLDI-2020-Artifact-Evaluation/blob/master/pldi2020-paper29.pdf)
  - VM Details
     - VM Player: VirtualBox 6.0.4 Or VirtualBox 5.1
-    - Ubuntu Image: ova
+    - Ubuntu Image: [ova](https://drive.google.com/file/d/1DATqsXzX7mg9nq6tgKlQfl2hnTc26yFS/view?usp=sharing)
       -   md5 hash: 3501fcd9f082d448c63e2a642fbc4718
       -   login: sdasgup3
       -   password: aecadmin123
