@@ -9,12 +9,12 @@
     - Guest Machine requirements
       - Minimum 8 GB of RAM.
       - Recommended number of processors is 4 to allow parallel experiments.
-  - We have also included the current repo in the VM disk, so that one can access this README.md file at `~/Github/PLDI20-Artifact-Evaluation/README.md`. This is just in case the bidirectional shared clipboard does not work on the VirtualBox.
+  - We have also included the current repository in the VM disk, so that one can access this README.md file at `~/Github/PLDI20-Artifact-Evaluation/README.md`. This is just in case the bidirectional shared clipboard does not work on the VirtualBox.
   
 **Troubleshoot**: 
 1. For a Ubuntu host machine with Secure Boot enabled, the presented VirtualBox image may fail to be loaded. In that case, you can either disable the Secure Boot, or sign the VirtualBox module as described [here](https://askubuntu.com/questions/900118/vboxdrv-sh-failed-modprobe-vboxdrv-failed-please-use-dmesg-to-find-out-why/900121#900121).
 2. [VM bot up with black login screen](https://askubuntu.com/questions/1134892/ubuntu-18-04-lts-on-virtualbox-boots-up-but-black-login-screen)
-3. Virtualbox `Error ID: BLKCACHE_IOERR`: In the VB client, Storage » SATA Controlle" Use the cache I/O host (all other values are those used by default VirtualBox))
+3. Virtualbox `Error ID: BLKCACHE_IOERR`: In the VB client, Storage » SATA Controller" Use the cache I/O host (all other values are those used by default VirtualBox))
 
 ## Program-Level validation (PLV)
 ### Source code
@@ -193,16 +193,22 @@ cat docs/AE_docs/non-bugs.txt | parallel "echo {}; echo ===; cd {}; make provez3
 ```
 
 #### Reproducing bugs
-We provide the [list of bugs](https://github.com/sdasgup3/validating-binary-decompilation/tree/master/tests/single_instruction_translation_validation/mcsema/docs/AE_docs/bugs.txt). In order to show 
+We provide the [a list of bugs](https://github.com/sdasgup3/validating-binary-decompilation/tree/master/tests/single_instruction_translation_validation/mcsema/docs/AE_docs/bugs.txt). In order to show
 that the result of Z3-comparison on the corresponding verification queries, do the following:
 ```
 cd ~/Github/validating-binary-decompilation/tests/single_instruction_translation_validation/mcsema/
 cat docs/AE_docs/bugs.txt | parallel "cd {}; make provez3; cd -"
 ```
-The above command which show, for each buggy instruction, which register has mismatching symbolic summaries.
+The above command will show, for each buggy instruction, the register has mismatching symbolic summaries.
+
+We know, from our past experience, that having both the operands equal makes the semantics of some instructions pretty challenging. We leverage that by running SIV on instructions with its operands being the same register and found coupe of [bugs](https://github.com/sdasgup3/validating-binary-decompilation/tree/master/tests/single_instruction_translation_validation/mcsema/docs/AE_docs/same-reg-bugs.txt).
+```
+cd ~/Github/validating-binary-decompilation/tests/single_instruction_translation_validation/mcsema/
+cat docs/AE_docs/same-reg-bugs.txt | parallel "cd {}; make provez3; cd -"
+```
 
 #### Reproducing timeouts
-We found that [timeouts]((https://github.com/sdasgup3/validating-binary-decompilation/tree/master/tests/single_instruction_translation_validation/mcsema/docs/AE_docs/flaky_TO.txt)) (related to paddb, psubb) are flaky: the Z3 solver results toggled between unknown and unsat depending on the order in which other unrelated constraints are added (a known z3 issue: https://github.com/Z3Prover/z3/issues/1106). By removing the unrelated constraints, z3 concludes them to be equivalent. For example, for the above flaky cases, the current version of `test-z3.py` has the unrelated constraints commented-in (and marked with `REMOVE: START` and `REMOVE: END` tags). Hence, folloing the steps will them all of them pass
+We found that [timeouts]((https://github.com/sdasgup3/validating-binary-decompilation/tree/master/tests/single_instruction_translation_validation/mcsema/docs/AE_docs/flaky_TO.txt)) (related to paddb, psubb) are flaky: the Z3 solver results toggled between unknown and unsat depending on the order in which other unrelated constraints are added (a known z3 issue: https://github.com/Z3Prover/z3/issues/1106). By removing the unrelated constraints, z3 concludes them to be equivalent. For example, for the above flaky cases, the current version of `test-z3.py` has the unrelated constraints commented-in (and marked with `REMOVE: START` and `REMOVE: END` tags). Hence, following the steps will them all of them pass
 ```
 cat docs/AE_docs/flaky_TO.txt | parallel "cd {}; make provez3; cd -"
 ```
@@ -210,7 +216,7 @@ cat docs/AE_docs/flaky_TO.txt | parallel "cd {}; make provez3; cd -"
 However, in we remove the comment (marked with `REMOVE: START` and `REMOVE: END` tags), from say `psubb_xmm_xmm`, are run it again, then we will get the long timeout. Here are the steps
 ```
 cd register-variants/psubb_xmm_xmm
-// Remove the comment marged by `REMOVE: START` and `REMOVE: END` tags
+// Remove the comment marked by `REMOVE: START` and `REMOVE: END` tags
 make provez3
 ```
 
