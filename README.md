@@ -163,7 +163,7 @@ For each binary instruction, for example the [addq_r64_r64](https://github.com/s
 #### An example run
 Running SIV on an isolated example instruction `addq_r64_r64` involves the following step
 ```
-~/Github/validating-binary-decompilation/tests/single_instruction_translation_validation/mcsema/docs/AE_docs/run_standalone.sh register-variants/addq_r64_r64
+~/Github/validating-binary-decompilation/tests/scripts/run_standalone_siv.sh register-variants/addq_r64_r64
 ```
 
 ### Details about SIV pipeline
