@@ -2,7 +2,7 @@
  - Accepted Paper [pdf](https://github.com/sdasgup3/PLDI-2020-Artifact-Evaluation/blob/master/pldi2020-paper29.pdf)
  - VM Details
     - VM Player: [VirtualBox](https://www.virtualbox.org/) 6.1 Or 5.1
-    - Ubuntu Image: [ova](https://drive.google.com/file/d/1DATqsXzX7mg9nq6tgKlQfl2hnTc26yFS/view?usp=sharing)
+    - Ubuntu Image: [ova](https://drive.google.com/file/d/10F57jxFIWb5R-W0JvFilZll0hzWQUiz8/view?usp=sharing)
       -   [md5 hash](https://docs.google.com/document/d/1YzOBUxWMoXes9bcqWTJYrXeWxVRGFUnefhs8jDxDabs/edit?usp=sharing)
       -   login: sdasgup3
       -   password: aecadmin123
