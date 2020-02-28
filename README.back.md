@@ -336,9 +336,20 @@ above list as `register-variants-samereg/*`.  Bug Reports to McSema can be
                                           which are all acknowledged.
 
 #### Reproducing timeouts
-The timeouts (related to mulq) include solver constraints containing bit vector
-multiplication which the state-of-the-art SMT solvers are not very efficient at
-reasoning about. These cases timed-out (after 24h) reproducibly.
+We found that [timeouts]((https://github.com/sdasgup3/validating-binary-decompilation/tree/master/tests/single_instruction_translation_validation/mcsema/docs/AE_docs/flaky_TO.txt)) (related to paddb, psubb) are flaky: the Z3 solver results toggled between unknown and unsat depending on the order in which other unrelated constraints are added (a known z3 issue: https://github.com/Z3Prover/z3/issues/1106). By removing the unrelated constraints, z3 concludes them to be equivalent. For example, for the above flaky cases, the current version of `test-z3.py` has the unrelated constraints commented-in (and marked with `REMOVE: START` and `REMOVE: END` tags). Hence, following the steps will them all of them pass
+```
+cd ~/Github/validating-binary-decompilation/tests/single_instruction_translation_validation/mcsema/
+cat docs/AE_docs/flaky_TO.txt | parallel "echo ; echo {}; echo ===; cd {}; make provez3; cd -" |& tee ~/Junk/log
+```
+
+However, in we remove the comment (marked with `REMOVE: START` and `REMOVE: END` tags), from say `psubb_xmm_xmm`, are run it again, then we will get the long timeout. Here are the steps
+```
+cd register-variants/psubb_xmm_xmm
+// Remove the comment marked by `REMOVE: START` and `REMOVE: END` tags
+make provez3
+```
+
+The remaining case (related to mulq) include solver constraints containing bit vector multiplication which the state-of-the-art SMT solvers are not very efficient at reasoning about. These cases timed-out (after 24h) reproducibly.
 ```
 cd register-variants/mulq_r64
 make provez3 // Timeout provides is 24 hrs
