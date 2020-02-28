@@ -9,10 +9,8 @@ This file gives the step-by-step instructions on how  to evaluate the artifacts 
       -   login: sdasgup3
       -   password: aecadmin123
     - Guest Machine requirements
-      - Minimum 8 GB of RAM.
-      - Minimum number of processors is 4 to allow parallel experiments.
-      - Recommended to configure the VM with more RAM and processor to allow aggressive parallel experiments.
-  - We have also included the current repository in the VM disk, so that one can access this README.md file at `~/Github/PLDI20-Artifact-Evaluation/README.md`. This is just in case the bidirectional shared clipboard does not work for the VirtualBox.
+      - Minimum (8 GB of RAM) & 4 processors to allow parallel experiments. However, it is recommended to configure the VM with more RAM and processors to allow aggressive parallel experiments.
+  - We have also included the current repository in the VM disk, so that one can access this README.md file at `~/Github/PLDI20-Artifact-Evaluation/README.md`. This is just only to avoid the unfortunate scenario of the "bidirectional shared clipboard" not working for the VirtualBox.
   
 **Troubleshoot**: 
 1. For a Ubuntu host machine with Secure Boot enabled, the presented VirtualBox image may fail to be loaded. In that case, you can either disable the Secure Boot, or sign the VirtualBox module as described [here](https://askubuntu.com/questions/900118/vboxdrv-sh-failed-modprobe-vboxdrv-failed-please-use-dmesg-to-find-out-why/900121#900121).
