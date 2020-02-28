@@ -4,7 +4,7 @@ This file gives the Step-by-Step instructions on how  to evaluate our artifact o
  - Accepted Paper [pdf](https://github.com/sdasgup3/PLDI-2020-Artifact-Evaluation/blob/master/pldi2020-paper29.pdf)
  - VM Details
     - VM Player: [VirtualBox](https://www.virtualbox.org/) 6.1 Or 5.1
-    - Ubuntu Image: [ova, size ~16G ](https://drive.google.com/file/d/10F57jxFIWb5R-W0JvFilZll0hzWQUiz8/view?usp=sharing)
+    - Ubuntu Image: [ova, size ~16G ](https://drive.google.com/file/d/1nd6wmC-z--PCYh_0MR27ZxwGda9Z4tkm/view?usp=sharing)
       -   [md5 hash](https://docs.google.com/document/d/1YzOBUxWMoXes9bcqWTJYrXeWxVRGFUnefhs8jDxDabs/edit?usp=sharing)
       -   login: sdasgup3
       -   password: aecadmin123
