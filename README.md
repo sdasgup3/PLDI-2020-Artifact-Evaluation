@@ -55,7 +55,7 @@ The [test directory](https://github.com/sdasgup3/validating-binary-decompilation
 
 #### An example run
 Here we will elaborate the process of running PLV on an isolated example function `Queens/Doit/`. 
-We use shell variable NORM to specify which set of optimization passes to use for normalization. For example, the value `CUSTOM` enables using a [set of 17 LLVM opt passes](https://github.com/sdasgup3/validating-binary-decompilation/blob/master/tests/scripts/matcher_driver.sh#L16) for normalization. Other values of NORM enables using autotuner for pass selection. but is relevant for the current submission. 
+We use shell variable NORM to specify which set of optimization passes to use for normalization. For example, the value `CUSTOM` enables using a [set of 17 LLVM opt passes](https://github.com/sdasgup3/validating-binary-decompilation/blob/master/tests/scripts/matcher_driver.sh#L16) for normalization. Another option for NORM enables autotuner for pass selection. but is relevant for the current submission. 
 
 Running PLV on it involves the following steps
 ```
@@ -82,8 +82,11 @@ make mcsema_opt
 make match
 ```
 **Please Note**
-The make target `match` already includes the normalization actions of `compd_opt` & `mcsema_opt`, hence one can skip invoking the redundant targets. The reason we still have those targets are for legacy reasons and included in this presentation
-for better explanation of the steps. For example. instead of the above steps one can do
+The Make target `match` already includes the normalization actions of
+`compd_opt` & `mcsema_opt`, hence one can skip invoking the redundant targets.
+The reason we still have those targets are for legacy reasons and included in
+this presentation for better explanation of the steps. For example. instead of
+the above steps one can do
 ```
 export NORM=CUSTOM
 cd ~/Github/validating-binary-decompilation/tests/program_translation_validation/single-source-benchmark/Queens/Doit/
@@ -91,33 +94,65 @@ make compd
 make match
 ```
 
- 
-### Batch run
-To demonstrate a batch run, we have included a list of sample functions in a list `~/Github/validating-binary-decompilation/tests/program_translation_validation/single-source-benchmark/docs/AE_docs/samplePassList.txt`. The list also
-includes function `himenobmtxpa/jacobi`, the biggest function we tried lifting before submission, wherein the size of the extracted LLVM IR, using the Compositional Lifter, is `32105` LOC.
+### Batch run (Recommended)
+To demonstrate a batch run, we have included a list of sample functions in a
+list
+`~/Github/validating-binary-decompilation/tests/program_translation_validation/single-source-benchmark/docs/AE_docs/samplePassList.txt`.
+The list also includes function `himenobmtxpa/jacobi`, the biggest function we
+tried lifting before submission, wherein the size of the extracted LLVM IR,
+      using the Compositional Lifter, is `32105` LOC.
 
-Running PLV in batch mode involves the following steps
+Running PLV in batch mode, over a sample list of functions, involves the following steps
 ```
-export NORM=CUSTOM
 cd ~/Github/validating-binary-decompilation/tests/program_translation_validation/single-source-benchmark/
+../../scripts/run_batch_plv.sh docs/AE_docs/samplePassList.txt
 
-## Running Compositional Lifter
-cat docs/AE_docs/samplePassList.txt | parallel "cd {}; make  compd; cd - "
-
-## Running Normalizer + Matcher
-cat docs/AE_docs/samplePassList.txt | parallel "cd {}; make  match - "
+# cat ../../scripts/run_batch_plv.sh
+# LIST=$1
+# 
+# 
+# TESTARENA=" ~/Github/validating-binary-decompilation/tests/program_translation_validation/single-source-benchmark/"
+# 
+# echo "Batch Run Begin"
+# echo
+# 
+# echo "Setting NORMALIZATION to custom passes"
+# export NORM=CUSTOM
+# 
+# echo
+# echo "Running Compositional Lifter + Normalizer + Matcher"
+# cat $LIST | parallel "echo ; echo {}; echo =======; cd {}; make  compd; make match; cd - "
+# 
+# echo "Batch Run Begin"
 ```
+
 **Please Note**
-We have provided the list of `2189` passing cases `~/Github/validating-binary-decompilation/tests/program_translation_validation/single-source-benchmark/docs/AE_docs/matcherPassList.txt`, which can 
-be run using either batch mode or individually.
+We have provided the list of `2189` passing cases
+`~/Github/validating-binary-decompilation/tests/program_translation_validation/single-source-benchmark/docs/AE_docs/matcherPassList.txt`,
+  which can be run using either batch mode or individually.
+
+The reviewer is encouraged to pick a random count of entries form the file and invoke the batch run
+```
+cd ~/Github/validating-binary-decompilation/tests/program_translation_validation/single-source-benchmark/
+sort -R docs/AE_docs/matcherPassList.txt | head -n 10 > /dev/stdout | ../../scripts/run_batch_plv.sh   /dev/stdin
+```
 
 ### PLV injected bug detection
-We provided a [list of test-cases](https://github.com/sdasgup3/validating-binary-decompilation/blob/master/tests/program_translation_validation/single-source-benchmark/docs/AE_docs/sampleInjectedBugs.txt), to demonstrate the effectiveness of PLV to catch potential bugs. The test-cases represent the four different category of injections as mentioned in paper (line 1073) and generated by modifying the McSema-lifted-IR function `Queens/Rand`. For example, an example injection can be found at `~/Github/validating-binary-decompilation/tests/program_translation_validation/single-source-benchmark/Inject.1/binary/test.mcsema.ll`, where the bug is marked with comment tag `BUG`, alongwith the original line of code marked by tag `ORIG`. This bug is related to choosing a wrong instruction template. Running the PLV  pipeline will result in matcher bug, as follows:
-```
-cd  /home/sdasgup3/Github/validating-binary-decompilation/tests/program_translation_validation/single-source-benchmark
-export NORM=CUSTOM
-cat docs/AE_docs/sampleInjectedBugs.txt | parallel "cd {}; make compd; make match; cd -"
-```
+
+We provided a [list of
+test-cases](https://github.com/sdasgup3/validating-binary-decompilation/blob/master/tests/program_translation_validation/single-source-benchmark/docs/AE_docs/sampleInjectedBugs.txt),
+to demonstrate the effectiveness of PLV to catch potential bugs. The test-cases
+represent the four different category of injections as mentioned in paper (line
+    1073) and generated by modifying the McSema-lifted-IR function
+`Queens/Rand`. For example, an example injection can be found at
+`~/Github/validating-binary-decompilation/tests/program_translation_validation/single-source-benchmark/Inject.1/binary/test.mcsema.ll`,
+  where the bug is marked with comment tag `BUG`, alongwith the original line
+  of code marked by tag `ORIG`. This bug is related to choosing a wrong
+  instruction template. Running the PLV  pipeline will result in matcher bug,
+  as follows: ``` cd
+  /home/sdasgup3/Github/validating-binary-decompilation/tests/program_translation_validation/single-source-benchmark
+  export NORM=CUSTOM cat docs/AE_docs/sampleInjectedBugs.txt | parallel "cd {};
+make compd; make match; cd -" ```
 
 However, commenting-in the line below the `BUG` tag, and uncommenting the line below `ORIG` tag, will make the matcher pass in all the cases. 
 
