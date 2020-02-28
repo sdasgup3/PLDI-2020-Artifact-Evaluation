@@ -1,3 +1,9 @@
+This file gives the Step-by-Step instructions on how  to evaluate our artifact.
+An online version of this file can be found
+[here](https://github.com/sdasgup3/PLDI20-Artifact-Evaluation/blob/master/README.md).
+We would like to encourage the reviewers to follow the online link as that might help
+click-navigate to internal (to this doc) and external links.
+
 ## Artifact Submission
  - Accepted Paper [pdf](https://github.com/sdasgup3/PLDI-2020-Artifact-Evaluation/blob/master/pldi2020-paper29.pdf)
  - VM Details
@@ -56,7 +62,7 @@ The [test directory](https://github.com/sdasgup3/validating-binary-decompilation
 
 #### An example run
 Here we will elaborate the process of running PLV on an isolated example function `Queens/Doit/`. 
-We use shell variable NORM to specify which set of optimization passes to use for normalization. For example, the value `CUSTOM` enables using a [set of 17 LLVM opt passes](https://github.com/sdasgup3/validating-binary-decompilation/blob/master/tests/scripts/matcher_driver.sh#L16) for normalization. Another option for NORM enables autotuner for pass selection. but is relevant for the current submission. 
+We use shell variable NORM to specify which set of optimization passes to use for normalization. For example, the value `CUSTOM` enables using a [set of 17 LLVM opt passes](https://github.com/sdasgup3/validating-binary-decompilation/blob/master/tests/scripts/matcher_driver.sh#L16) for normalization. Another option for NORM enables AutoTuner for pass selection. but is relevant for the current submission. 
 
 Running PLV on it involves the following steps
 ```
@@ -157,7 +163,7 @@ cd  /home/sdasgup3/Github/validating-binary-decompilation/tests/program_translat
 ../../scripts/run_batch_injected_bug_plv.sh docs/AE_docs/sampleInjectedBugs.txt
 ```
 
-However, commenting-in the line below the `INJECTED_BUG` tag, and uncommenting
+However, commenting-in the line below the `INJECTED_BUG` tag, and un-commenting
 the line below `ORIG` tag, will make the matcher pass in all the cases.
 
 For example, follow the steps above steps to rectify `~/Github/validating-binary-decompilation/tests/program_translation_validation/single-source-benchmark/Inject.1/binary/test.mcsema.ll` and invoke:
@@ -170,7 +176,7 @@ The script `../../scripts/run_batch_injected_bug_plv.sh` differs from
 `../../scripts/run_batch_injected_bug_plv.sh` in having an extra Make target
 `mcsema`. From the [above](https://github.com/sdasgup3/PLDI20-Artifact-Evaluation/blob/master/README.md#testing-arena-for-plv) discussion, this target is used to (1) Invoke IDA +
 McSema to generate `binary/test.mcsema.ll`, and (2) Sanitize the McSema generate
-file to `binary/test.mcsema.inline.ll`. For reasons about IDA lisensing, we want
+file to `binary/test.mcsema.inline.ll`. For reasons about IDA licensing, we want
 to skip (1). However, (2) is required, as we want to sanitize the bug-injected
 McSema lifted file `binary/test.mcsema.ll`. To accomplish this partial
 execution of Make target, we modified the corresponding [Makefile](https://github.com/sdasgup3/validating-binary-decompilation/blob/master/tests/program_translation_validation/single-source-benchmark/Inject.1/Makefile#L31);
@@ -243,7 +249,7 @@ echo register-variants/addq_r64_r64 > /tmp/sample.txt
 ## cat $LIST | parallel "cd $TESTARENA/{}; make collect; cd -"
 ## 
 ## echo
-## echo "Kompiling the collected X86 semantics to create a sym-ex"
+## echo "Compiling the collected X86 semantics to create a sym-ex"
 ## cd ~/Github/X86-64-semantics/semantics
 ## ../scripts/kompile.pl --backend java
 ## cd -
@@ -275,7 +281,7 @@ However, please note that all these error messages can be safely ignored as it
 does NOT affect the soundness of the summary generation process.
 
 #### Batch runs
-The goal of the entire SIV pipeline is to genarate the file `Output/test-z3.py`
+The goal of the entire SIV pipeline is to generate the file `Output/test-z3.py`
 [an
 example](https://github.com/sdasgup3/validating-binary-decompilation/blob/master/tests/single_instruction_translation_validation/mcsema/register-variants/adcq_r64_r64/Output/test-z3.py)
 encoding the verification conditions, which is then dispatched (using Make
@@ -309,13 +315,13 @@ cd ~/Github/validating-binary-decompilation/tests/single_instruction_translation
 sort -R docs/AE_docs/non-bugs.txt | head -n 50 | parallel "echo ; echo {}; echo ===; cd {}; make provez3; cd -" |& tee ~/Junk/log
 ```
 
-In order to run the entire SIV pileline (and hence to reproduce the
+In order to run the entire SIV pipeline (and hence to reproduce the
     verification conditions file)
 ```
 cd ~/Github/validating-binary-decompilation/tests/single_instruction_translation_validation/mcsema/
-sort -R docs/AE_docs/non-bugs.txt | head -n 4 > /tmp/sample.txt    # Select 4 random cases; Change it to any numer of random selection
+sort -R docs/AE_docs/non-bugs.txt | head -n 4 > /tmp/sample.txt    # Select 4 random cases; Change it to any number of random selection
 ../../scripts/run_batch_siv.sh /tmp/sample.txt 1 |& tee ~/Junk/log # If the guest machine is configured with more CPUs and RAM (>8GB), then the
-                                                                   # reviewer is encouraged to fire more paralle runs (by changing 1 to a higher number)
+                                                                   # reviewer is encouraged to fire more parallel runs (by changing 1 to a higher number)
 ```
 
 #### Reproducing bugs
@@ -336,7 +342,7 @@ above list as `register-variants-samereg/*`.  Bug Reports to McSema can be
                                           which are all acknowledged.
 
 #### Reproducing timeouts
-The timeouts (related to mulq) include solver constraints containing bit vector
+The timeouts (related to `mulq`) include solver constraints containing bit vector
 multiplication which the state-of-the-art SMT solvers are not very efficient at
 reasoning about. These cases timed-out (after 24h) reproducibly.
 ```
