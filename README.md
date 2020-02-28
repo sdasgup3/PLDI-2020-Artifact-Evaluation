@@ -167,12 +167,12 @@ echo Inject.1/Rand/ > /dev/stdout | ../../scripts/run_batch_injected_bug_plv.sh 
 **Please Note**
 The script `../../scripts/run_batch_injected_bug_plv.sh` differs from
 `../../scripts/run_batch_injected_bug_plv.sh` in having an extra Make target
-`mcsema`. From the above discussion, this target is used to (1) Invoke IDA +
-McSema to generate `binary/test.mcsema.ll`, (2) Sanitize the McSema generate
-file to `binary/test.mcsema.inline.ll`. For reasons mentioned earlier, we want
-to skip (1). However, (2) is required as we want to sanitize the bug-injected
+`mcsema`. From the [above](https://github.com/sdasgup3/PLDI20-Artifact-Evaluation/blob/master/README.md#testing-arena-for-plv) discussion, this target is used to (1) Invoke IDA +
+McSema to generate `binary/test.mcsema.ll`, and (2) Sanitize the McSema generate
+file to `binary/test.mcsema.inline.ll`. For reasons about IDA lisensing, we want
+to skip (1). However, (2) is required, as we want to sanitize the bug-injected
 McSema lifted file `binary/test.mcsema.ll`. To accomplish this partial
-execution of Make target, we modified the corresponding [Makefile]();
+execution of Make target, we modified the corresponding [Makefile](https://github.com/sdasgup3/validating-binary-decompilation/blob/master/tests/program_translation_validation/single-source-benchmark/Inject.1/Makefile#L31);
 
 ## Single-Instruction validation (SIV)
 ### Source code
