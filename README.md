@@ -38,7 +38,7 @@ The [test directory](https://github.com/sdasgup3/validating-binary-decompilation
  - `Makefile`: With the following relevant targets
    - `binary`: To generate `binary/test`
    - `reloc_binary`: To generate `binary/test.reloc`
-   - `mcsema`: To generate `binary/test.mcsema.bc`,`binary/test.mcsema.inline.ll`, and `binary/test.mcsema.calls_renamed.ll` (To be Skipped)
+   - `mcsema`: To generate `binary/test.mcsema.bc`,`binary/test.mcsema.inline.ll`, and `binary/test.mcsema.calls_renamed.ll` using McSema tool (To be Skipped during evaluation for reason detailed below)
   - `Doit (or Initrand/Rand/main/Try/Queens)` (Artifacts related to individual functions of the `Queens`'s program, extracted using external tool [wllvm](https://github.com/travitch/whole-program-llvm))
     - `mcsema/test.proposed.ll`: The LLVM IR, corresponding to function `Doit`, generated using Compositional Lifter.
     - `mcsema/test.proposed.inlined.ll`: Inlined version of `mcsema/test.proposed.ll`
