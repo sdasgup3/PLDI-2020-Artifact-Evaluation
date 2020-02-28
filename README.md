@@ -27,9 +27,9 @@ The two major components of PLV are [Compositional Lifter](https://github.com/sd
 The [test directory](https://github.com/sdasgup3/validating-binary-decompilation/tree/master/tests/program_translation_validation/) contains test-suites like `toy-examples` and `single-source-benchmark`. The [single-source-benchmark](https://github.com/sdasgup3/validating-binary-decompilation/tree/master/tests/program_translation_validation/single-source-benchmark) contain folders for all the programs hosted by the test-suite. Each such program, for example the [Queens program](https://github.com/sdasgup3/validating-binary-decompilation/tree/master/tests/program_translation_validation/single-source-benchmark/Queens), has the following structure:
 
 
- - `src` (the source artifacts of the program)
+ - `src/` (the source artifacts of the program)
    - `test.ll or test.bc` (Source LLVM code of `Queens`'s program) 
- - binary
+ - `binary/`
    - `test`: Binary compiled from src/test.bc
    - `test.mcsema.bc`: McSema lifted LLVM IR from `binary/test`
    - `test.mcsema.calls_renamed.ll`: A version of `binary/test.mcsema.ll` with function calls renamed so as to prevent inter-procedural optimization during normalization
