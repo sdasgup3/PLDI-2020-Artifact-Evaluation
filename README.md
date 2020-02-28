@@ -1,4 +1,4 @@
-This file gives the Step-by-Step instructions on how  to evaluate our artifact of "Scalable Validation of Binary Lifters".
+This file gives the step-by-step instructions on how  to evaluate the artifacts for "Scalable Validation of Binary Lifters".
 
 ## Artifact Submission
  - Accepted Paper [pdf](https://github.com/sdasgup3/PLDI-2020-Artifact-Evaluation/blob/master/pldi2020-paper29.pdf)
