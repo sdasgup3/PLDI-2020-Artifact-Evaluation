@@ -48,7 +48,7 @@ The [test directory](https://github.com/sdasgup3/validating-binary-decompilation
       - `mcsema_opt`: Invoke Normalizer to normalize `../binary/test.mcsema.inline.ll` using the [LLVM opt pass list](https://github.com/sdasgup3/validating-binary-decompilation/blob/master/tests/scripts/matcher_driver.sh#L15). Generates `mcsema/test.mcsema.opt.ll`
       - `match`: Invoke Matcher to check for graph-isomorphism on the data-dependence graphs of the above normalized versions `mcsema/test.proposed.opt.ll` & `mcsema/test.mcsema.opt.ll`.
 
-**Please Note** 
+**Note** 
  1. We have pre-populated the McSema lifted LLVM IR `<program name>/binary/test.mcsema.bc` because McSema needs a licensed disassembler `IDA` to generate this file, which is not provided because of some licensing issues.
  2. The [_Store_](https://github.com/sdasgup3/compd_cache) has the validated IR sequences of individual binary instructions,  generated using McSema. As a result, we have packaged the entire _Store_ in the VM, so that the reviewer do not have to run McSema. 
  
@@ -82,7 +82,7 @@ make mcsema_opt
 ## Matching mcsema/test.proposed.opt.ll & mcsema/test.mcsema.opt.ll
 make match
 ```
-**Please Note**
+**Note**
 The Make target `match` already includes the normalization actions of
 `compd_opt` & `mcsema_opt`, hence one can skip invoking the redundant targets.
 The reason we still have those targets are for legacy reasons and included in
@@ -127,7 +127,7 @@ cd ~/Github/validating-binary-decompilation/tests/program_translation_validation
 ## echo "Batch Run Begin"
 ```
 
-**Please Note**
+**Note**
 We have provided the list of `2189` passing cases
 `~/Github/validating-binary-decompilation/tests/program_translation_validation/single-source-benchmark/docs/AE_docs/matcherPassList.txt`,
   which can be run using either batch mode or individually.
@@ -165,7 +165,7 @@ For example, follow the steps above steps to rectify `~/Github/validating-binary
 echo Inject.1/Rand/ > /dev/stdout | ../../scripts/run_batch_injected_bug_plv.sh  /dev/stdin
 ```
 
-**Please Note**
+**Note**
 The script `../../scripts/run_batch_injected_bug_plv.sh` differs from
 `../../scripts/run_batch_injected_bug_plv.sh` in having an extra Make target
 `mcsema`. From the [above](https://github.com/sdasgup3/PLDI20-Artifact-Evaluation/blob/master/README.md#testing-arena-for-plv) discussion, this target is used to (1) Invoke IDA +
@@ -205,7 +205,7 @@ For each binary instruction, for example the [addq_r64_r64](https://github.com/s
    - `genz3`: Invoke [spec-to-smt](https://github.com/sdasgup3/validating-binary-decompilation/blob/master/source/tools/spec-to-smt/spec-to-smt.cpp) to create `Output/test-z3.py` containing verification queries.
    - `provez3`: Invoke z3 on `Output/test-z3.py`.
    
-**Please Note** 
+**Note** 
   1. Similar files are available for other instructions and their variants (memory, immediate, register).
   2. We have pre-populated the McSema lifted LLVM IR `<instruction opcode>/test.ll` because McSema is not included in the VM distribution.
  
@@ -265,7 +265,7 @@ echo register-variants/addq_r64_r64 > /tmp/sample.txt
 ## echo "Batch Run End"
 ```
 
-**Please Note**
+**Note**
 The Make target `xprove` will exit with non-zero status and it is a know issue.
 These errors are because of missing KAST (internal K AST) to SMT
 translation.  We do not need the translations as we have separate tool
