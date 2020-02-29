@@ -56,7 +56,7 @@ The [test directory](https://github.com/sdasgup3/validating-binary-decompilation
 
 #### An example run
 Here we will elaborate the process of running PLV on an isolated example function `Queens/Doit/`. 
-We use shell variable NORM to specify which set of optimization passes to use for normalization. For example, the value `CUSTOM` enables using a [set of 17 LLVM opt passes](https://github.com/sdasgup3/validating-binary-decompilation/blob/master/tests/scripts/matcher_driver.sh#L16) for normalization. Another option for NORM enables AutoTuner for pass selection. but is relevant for the current submission. 
+We use shell variable NORM to specify which set of optimization passes to use for normalization. For example, the value `CUSTOM` enables using a [set of 17 LLVM opt passes](https://github.com/sdasgup3/validating-binary-decompilation/blob/master/tests/scripts/matcher_driver.sh#L16) for normalization. As as aside, there is an option for NORM which enables AutoTuner for pass selection.
 
 Running PLV on it involves the following steps
 ```
