@@ -45,8 +45,8 @@ The [test directory](https://github.com/sdasgup3/validating-binary-decompilation
     - `mcsema/test.proposed.inlined.ll`: Inlined version of `mcsema/test.proposed.ll`
     - `Makefile`: With the following relevant targets
       - `compd`: Invoke Compositional Lifter to generate `mcsema/test.proposed.inline.ll`
-      - `compd_opt`: Invoke Normalizer to normalize `mcsema/test.proposed.inline.ll` using the [LLVM opt pass list](https://github.com/sdasgup3/validating-binary-decompilation/blob/master/tests/scripts/matcher_driver.sh#L15). Generates `mcsema/test.proposed.opt.ll`.
-      - `mcsema_opt`: Invoke Normalizer to normalize `../binary/test.mcsema.inline.ll` using the [LLVM opt pass list](https://github.com/sdasgup3/validating-binary-decompilation/blob/master/tests/scripts/matcher_driver.sh#L15). Generates `mcsema/test.mcsema.opt.ll`
+      - `compd_opt`: Invoke Normalizer to normalize `mcsema/test.proposed.inline.ll` using the [LLVM opt pass list](https://github.com/sdasgup3/validating-binary-decompilation/blob/pldi20_ae/tests/scripts/matcher_driver.sh#L16). Generates `mcsema/test.proposed.opt.ll`.
+      - `mcsema_opt`: Invoke Normalizer to normalize `../binary/test.mcsema.inline.ll` using the [LLVM opt pass list](https://github.com/sdasgup3/validating-binary-decompilation/blob/pldi20_ae/tests/scripts/matcher_driver.sh#L16). Generates `mcsema/test.mcsema.opt.ll`
       - `match`: Invoke Matcher to check for graph-isomorphism on the data-dependence graphs of the above normalized versions `mcsema/test.proposed.opt.ll` & `mcsema/test.mcsema.opt.ll`.
 
 **Note** 
@@ -57,7 +57,7 @@ The [test directory](https://github.com/sdasgup3/validating-binary-decompilation
 
 #### An example run
 Here we will elaborate the process of running PLV on an isolated example function `Queens/Doit/`. 
-We use shell variable NORM to specify which set of optimization passes to use for normalization. For example, the value `CUSTOM` enables using a [set of 17 LLVM opt passes](https://github.com/sdasgup3/validating-binary-decompilation/blob/master/tests/scripts/matcher_driver.sh#L16) for normalization. As as aside, there is an option for NORM which enables AutoTuner for pass selection.
+We use shell variable NORM to specify which set of optimization passes to use for normalization. For example, the value `CUSTOM` enables using a [set of 17 LLVM opt passes](https://github.com/sdasgup3/validating-binary-decompilation/blob/pldi20_ae/tests/scripts/matcher_driver.sh#L16) for normalization. As as aside, there is an option for NORM which enables AutoTuner for pass selection.
 
 Running PLV on it involves the following steps
 ```
