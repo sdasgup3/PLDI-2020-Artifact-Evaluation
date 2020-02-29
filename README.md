@@ -8,8 +8,8 @@ This file gives the step-by-step instructions on how  to evaluate the artifacts 
       -   [md5 hash](https://docs.google.com/document/d/1YzOBUxWMoXes9bcqWTJYrXeWxVRGFUnefhs8jDxDabs/edit?usp=sharing)
       -   login: sdasgup3
       -   password: aecadmin123
-    - Guest Machine requirements
-      - Minimum (8 GB of RAM) & (4 processors) to allow parallel experiments. However, it is recommended to configure the VM with more RAM and processors to allow aggressive parallel experiments.
+    - Guest Machine recommended settings
+      - RAM: Min-8GB, Max-16GB and Cores:Min-4, Max-8. However, it is recommended to configure the VM with more RAM and processors to allow  parallel experiments during single instruction validation.
   - We have also included the current repository in the VM disk, so that one can access this README.md file at `~/Github/PLDI20-Artifact-Evaluation/README.md`. This is just only to avoid the unfortunate scenario of the "bidirectional shared clipboard" not working for the VirtualBox.
   
 **Troubleshoot**: 
@@ -314,13 +314,13 @@ cd ~/Github/validating-binary-decompilation/tests/single_instruction_translation
 sort -R docs/AE_docs/non-bugs.txt | head -n 50 | parallel "echo ; echo {}; echo ===; cd {}; make provez3; cd -" |& tee ~/Junk/log
 ```
 
+**Note**
 In order to run the entire SIV pipeline (and hence to reproduce the
     verification conditions file from scratch)
 ```
 cd ~/Github/validating-binary-decompilation/tests/single_instruction_translation_validation/mcsema/
-sort -R docs/AE_docs/non-bugs.txt | head -n 4 > /tmp/sample.txt    # Select 4 random cases; Change it to any number of random selection
-../../scripts/run_batch_siv.sh /tmp/sample.txt 2 |& tee ~/Junk/log # If the guest machine is configured with RAM (>8GB), then the
-                                                                   # reviewer is encouraged to try more parallel runs (by changing 1 to a higher number)
+sort -R docs/AE_docs/non-bugs.txt | head -n 2 > /tmp/sample.txt    # Select 2 random cases
+../../scripts/run_batch_siv.sh /tmp/sample.txt |& tee ~/Junk/log
 ```
 
 #### Reproducing bugs
