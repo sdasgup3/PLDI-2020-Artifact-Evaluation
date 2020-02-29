@@ -49,8 +49,8 @@ The [test directory](https://github.com/sdasgup3/validating-binary-decompilation
       - `match`: Invoke Matcher to check for graph-isomorphism on the data-dependence graphs of the above normalized versions `mcsema/test.proposed.opt.ll` & `mcsema/test.mcsema.opt.ll`.
 
 **Note** 
- 1. We have pre-populated the McSema lifted LLVM IR `<program name>/binary/test.mcsema.bc` because McSema needs a licensed disassembler `IDA` to generate this file, which is not provided because of some licensing issues.
- 2. The [_Store_](https://github.com/sdasgup3/compd_cache) has the validated IR sequences of individual binary instructions,  generated using McSema. As a result, we have packaged the entire _Store_ in the VM, so that the reviewer do not have to run McSema. 
+ 1. We have pre-populated the McSema lifted LLVM IR `<program name>/binary/test.mcsema.ll` because McSema needs a licensed disassembler `IDA` to generate this file, which is not provided because of some licensing issues. Hence, the Make target `mcsema` will not work.
+ 2. The [_Store_](https://github.com/sdasgup3/compd_cache) has the validated IR sequences of individual binary instructions,  generated using McSema. For similar reasons as above, we have packaged the entire _Store_ in the VM, so that the reviewer do not have to invoke McSema. 
  
 ### Running the PLV pipeline
 
