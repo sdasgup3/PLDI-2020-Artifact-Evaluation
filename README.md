@@ -36,7 +36,7 @@ You should fix the problem as soon as feasible
 
 # Getting Started
 To check if the installations are working as expected, the reviewers should be able to run the following steps. 
-The steps (detailed in step-by-step-instruction section) are responsible to run the program-level validation
+The steps (detailed in [Step-by-step Instructions](https://github.com/sdasgup3/PLDI20-Artifact-Evaluation/blob/master/README.md#step-by-step-instructions) section) are responsible to run the program-level validation
 on function `Queen::Doit`
 ```
 export NORM=CUSTOM
