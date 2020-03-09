@@ -64,6 +64,13 @@ opt -S -mem2reg -licm -gvn -early-cse -globalopt -simplifycfg -basicaa -aa -memd
 Match Pass:both-exact-match:- /home/sdasgup3/Github/validating-binary-decompilation/tests/program_translation_validation/single-source-benchmark/Queens/Doit:Doit
 ```
 
+# Claims
+The reviewer should be able to 
+1. reproduce the program-level validation (PLV) runs on single-source benchmark.
+2. check that PLV is effective in detecting bugs which are artificially injected.
+3. run single-instruction validation pileline on individual instructions and generate the verification conditions to be dispatched to z3 solver.
+4. reproduce bugs and timeouts reported in the paper.
+
 # Step-by-step Instructions
 ## Program-Level validation (PLV)
 ### Source code
