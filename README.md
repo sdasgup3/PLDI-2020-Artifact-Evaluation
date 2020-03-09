@@ -34,6 +34,37 @@ As a result the session will not be configured correctly.
 You should fix the problem as soon as feasible
 ```
 
+# Getting Started
+To check if the installations are working as expected, the reviewers should be able to run the following steps. 
+The steps (detailed in step-by-step-instruction section) are responsible to run the program-level validation
+on function `Queen::Doit`
+```
+export NORM=CUSTOM
+cd ~/Github/validating-binary-decompilation/tests/program_translation_validation/single-source-benchmark/Queens/Doit/
+make compd
+make match
+```
+and expect the following output
+```
+$ export NORM=CUSTOM
+
+$ cd ~/Github/validating-binary-decompilation/tests/program_translation_validation/single-source-benchmark/Queens/Doit/
+
+$ make compd
+mkdir -p mcsema/
+time /home/sdasgup3/Github//validating-binary-decompilation/source/build/bin//decompiler  --output mcsema/test.proposed.ll --path /home/sdasgup3/Github/compd_cache/ --function Doit --input ../binary/test.reloc --use-reloc-info 1>mcsema/compd.log 2>&1
+Compd Pass:- /home/sdasgup3/Github/validating-binary-decompilation/tests/program_translation_validation/single-source-benchmark/Queens/Doit:Doit
+opt -S  -inline   mcsema/test.proposed.ll -o mcsema/test.proposed.inline.ll
+
+$ make match
+opt -S -mem2reg -licm -gvn -early-cse -globalopt -simplifycfg -basicaa -aa -memdep -dse -deadargelim -libcalls-shrinkwrap -tailcallelim -simplifycfg -basicaa -aa -instcombine -simplifycfg -early-cse -gvn -basicaa -aa -memdep -dse -memcpyopt mcsema/test.proposed.inline.ll -o mcsema/test.proposed.opt.ll
+opt -S -mem2reg -licm -gvn -early-cse -globalopt -simplifycfg -basicaa -aa -memdep -dse -deadargelim -libcalls-shrinkwrap -tailcallelim -simplifycfg -basicaa -aa -instcombine -simplifycfg -early-cse -gvn -basicaa -aa -memdep -dse -memcpyopt ../binary/test.mcsema.inline.ll -o mcsema/test.mcsema.opt.ll
+( time /home/sdasgup3/Github//validating-binary-decompilation/source/build/bin//matcher --file1 mcsema/test.mcsema.opt.ll:Doit --file2 mcsema/test.proposed.opt.ll:Doit ) 1>mcsema/match_mcsema_proposed.log 2>&1
+( time /home/sdasgup3/Github//validating-binary-decompilation/source/build/bin//matcher --file1 mcsema/test.proposed.opt.ll:Doit --file2 mcsema/test.mcsema.opt.ll:Doit ) 1>mcsema/match_proposed_mcsema.log 2>&1
+Match Pass:both-exact-match:- /home/sdasgup3/Github/validating-binary-decompilation/tests/program_translation_validation/single-source-benchmark/Queens/Doit:Doit
+```
+
+# Step-by-step Instructions
 ## Program-Level validation (PLV)
 ### Source code
 
