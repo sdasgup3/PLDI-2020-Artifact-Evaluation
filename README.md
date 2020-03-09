@@ -11,12 +11,28 @@ for "Scalable Validation of Binary Lifters".
       -   password: aecadmin123
     - Guest Machine recommended settings
       - RAM: Min-8GB, Max-16GB and Cores:Min-4, Max-8. However, it is recommended to configure the VM with more RAM and processors to allow  parallel experiments during single instruction validation.
+      - Allow 70GB of disk space as needed by the unpacked VM.
   - We have also included the current repository in the VM disk, so that one can access this README.md file at `~/Github/PLDI20-Artifact-Evaluation/README.md`. This is just only to avoid the unfortunate scenario of the "bidirectional shared clipboard" not working for the VirtualBox.
   
 **Troubleshoot**: 
 1. For a Ubuntu host machine with Secure Boot enabled, the presented VirtualBox image may fail to be loaded. In that case, you can either disable the Secure Boot, or sign the VirtualBox module as described [here](https://askubuntu.com/questions/900118/vboxdrv-sh-failed-modprobe-vboxdrv-failed-please-use-dmesg-to-find-out-why/900121#900121).
 2. [VM boot up with black login screen](https://askubuntu.com/questions/1134892/ubuntu-18-04-lts-on-virtualbox-boots-up-but-black-login-screen)
 3. Virtualbox `Error ID: BLKCACHE_IOERR`: In the VB client, Storage » SATA Controller" Use the cache I/O host (all other values are those used by default VirtualBox))
+4. On startup of the VM, you will get the following warning, which we recommend to ignore.
+```
+On startup of the VM, I received this error message (although otherwise the VM functioned normally):
+Error found when loading /home/sdasgup3/.profile:
+
+tput: No value for $TERM and no -T specified
+tput: No value for $TERM and no -T specified
+tput: No value for $TERM and no -T specified
+/home/sdasgup3/.bashrc: line 73: bind: warning: line editing not enabled
+Could not open a connection to your authentication agent.
+Could not open a connection to your authentication agent.
+
+As a result the session will not be configured correctly.
+You should fix the problem as soon as feasible
+```
 
 ## Program-Level validation (PLV)
 ### Source code
