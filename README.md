@@ -68,7 +68,7 @@ Match Pass:both-exact-match:- /home/sdasgup3/Github/validating-binary-decompilat
 The reviewer should be able to 
 1. reproduce the program-level validation (PLV) runs on single-source benchmark.
 2. check that PLV is effective in detecting bugs which are artificially injected.
-3. run single-instruction validation pileline on individual instructions and generate the verification conditions to be dispatched to z3 solver.
+3. run single-instruction validation pipeline on individual instructions and generate the verification conditions to be dispatched to z3 solver.
 4. reproduce bugs and timeouts reported in the paper.
 
 # Step-by-step Instructions
@@ -128,14 +128,14 @@ make compd
 
 ## Normalizing mcsema/test.proposed.inline.ll
 ## Creates mcsema/test.proposed.opt.ll
-make compd_opt
+make compd_opt # expect "Compd Pass" upon execution
 
 ## Normalizing ../binary/test.mcsema.inline.ll (Already populated using make mcsema)
 ## Creates mcsema/test.mcsema.opt.ll
 make mcsema_opt
 
 ## Matching mcsema/test.proposed.opt.ll & mcsema/test.mcsema.opt.ll
-make match
+make match # expect "Match Pass" upon execution
 ```
 **Note**
 The Make target `match` already includes the normalization actions of
@@ -157,6 +157,10 @@ list
 The list also includes function `himenobmtxpa/jacobi`, the biggest function we
 tried lifting before submission, wherein the size of the extracted LLVM IR,
       using the Compositional Lifter, is `32105` LOC.
+
+**Note**
+The runtime of the matcher on `himenobmtxpa/jacobi` might take up-to 4 mins.
+The reviewer might want to take down that function from the list ``~/Github/validating-binary-decompilation/tests/program_translation_validation/single-source-benchmark/docs/AE_docs/samplePassList.txt`.
 
 Running PLV in batch mode, over a sample list of functions, involves the following steps
 ```
@@ -276,8 +280,10 @@ Running SIV on an isolated example instruction `addq_r64_r64` involves the follo
 cd ~/Github/validating-binary-decompilation/tests/single_instruction_translation_validation/mcsema/
 echo register-variants/addq_r64_r64 > /tmp/sample.txt
 # Or try one of the following
-# echo immediate-variants/addq_r64_imm32 > /tmp/sample.txt
-# echo memory-variants/addq_r64_m64 > /tmp/sample.txt
+#     echo immediate-variants/addq_r64_imm32 > /tmp/sample.txt
+#     echo memory-variants/addq_r64_m64 > /tmp/sample.txt
+#     sort -R docs/AE_docs/non-bugs.txt | head -n 1 > /tmp/sample.txt
+
 ../../scripts/run_batch_siv.sh /tmp/sample.txt |& tee ~/Junk/log
 
 # cat ../../scripts/run_batch_siv.sh
@@ -326,18 +332,21 @@ echo register-variants/addq_r64_r64 > /tmp/sample.txt
 ```
 
 **Note**
-The Make target `xprove` will exit with non-zero status and it is a known issue.
-These errors are because of missing KAST (internal K AST) to SMT
-translations in the sym-ex engine backend. We do not need the translations as we have a separate tool
-[spec-to-smt](https://github.com/sdasgup3/validating-binary-decompilation/blob/master/source/tools/spec-to-smt/spec-to-smt.cpp)
-to achieve the translation from the summary that the target `xprove` produces.
-However, please note that all these error messages can be safely ignored as it
-does NOT affect the soundness of the summary generation process.
+1. The Make target `xprove` will exit with non-zero status and it is a known issue.
+  These errors are because of missing KAST (internal K AST) to SMT
+  translations in the sym-ex engine backend. We do not need the translations as we have a separate tool
+  [spec-to-smt](https://github.com/sdasgup3/validating-binary-decompilation/blob/master/source/tools/spec-to-smt/spec-to-smt.cpp)
+  to achieve the translation from the summary that the target `xprove` produces.
+  However, please note that all these error messages can be safely ignored as it
+  does NOT affect the soundness of the summary generation process.
+
+2. The entire execution will take up-to 4-5 mins.
 
 #### Batch runs
-The goal of the entire SIV pipeline is to generate the file `Output/test-z3.py`
-[an
-example](https://github.com/sdasgup3/validating-binary-decompilation/blob/master/tests/single_instruction_translation_validation/mcsema/register-variants/adcq_r64_r64/Output/test-z3.py)
+The goal of the entire SIV pipeline (as mentioned above) is to reproduce the file verification-query file `Output/test-z3.py`
+from scratch.
+Here is [an
+example test-z3.py file](https://github.com/sdasgup3/validating-binary-decompilation/blob/master/tests/single_instruction_translation_validation/mcsema/register-variants/adcq_r64_r64/Output/test-z3.py)
 encoding the verification conditions, which is then dispatched (using Make
 target `provez3`) to z3 for verification.
 
@@ -367,15 +376,6 @@ do the following:
 ```
 cd ~/Github/validating-binary-decompilation/tests/single_instruction_translation_validation/mcsema/
 sort -R docs/AE_docs/non-bugs.txt | head -n 50 | parallel "echo ; echo {}; echo ===; cd {}; make provez3; cd -" |& tee ~/Junk/log
-```
-
-**Note**
-In order to run the entire SIV pipeline (and hence to reproduce the
-    verification conditions file from scratch)
-```
-cd ~/Github/validating-binary-decompilation/tests/single_instruction_translation_validation/mcsema/
-sort -R docs/AE_docs/non-bugs.txt | head -n 2 > /tmp/sample.txt    # Select 2 random cases
-../../scripts/run_batch_siv.sh /tmp/sample.txt |& tee ~/Junk/log
 ```
 
 #### Reproducing bugs
