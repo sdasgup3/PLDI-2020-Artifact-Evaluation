@@ -225,7 +225,7 @@ echo Inject.1/Rand/ > /dev/stdout | ../../scripts/run_batch_injected_bug_plv.sh 
 ```
 
 **Note**
-The script `../../scripts/run_batch_injected_bug_plv.sh` differs from
+The script `../../scripts/run_batch_plv.sh` differs from
 `../../scripts/run_batch_injected_bug_plv.sh` in having an extra Make target
 `mcsema`. From the [above](https://github.com/sdasgup3/PLDI20-Artifact-Evaluation/blob/master/README.md#testing-arena-for-plv) discussion, this target is used to (1) Invoke IDA +
 McSema to generate `binary/test.mcsema.ll`, and (2) Sanitize the McSema generate
