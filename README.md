@@ -156,11 +156,9 @@ list
 `~/Github/validating-binary-decompilation/tests/program_translation_validation/single-source-benchmark/docs/AE_docs/samplePassList.txt`.
 The list also includes function `himenobmtxpa/jacobi`, the biggest function we
 tried lifting before submission, wherein the size of the extracted LLVM IR,
-      using the Compositional Lifter, is `32105` LOC.
+      using the Compositional Lifter, is `32105` LOC. Note that, the runtime of the matcher on 
+      `himenobmtxpa/jacobi` might take up-to 2 mins.
 
-**Note**
-The runtime of the matcher on `himenobmtxpa/jacobi` might take up-to 4 mins.
-The reviewer might want to take down that function from the list ``~/Github/validating-binary-decompilation/tests/program_translation_validation/single-source-benchmark/docs/AE_docs/samplePassList.txt`.
 
 Running PLV in batch mode, over a sample list of functions, involves the following steps
 ```
@@ -193,6 +191,7 @@ We have provided the list of `2189` passing cases
 
 The reviewer is encouraged to pick a random count of entries form the file and invoke the batch run
 ```
+export NORM=CUSTOM
 cd ~/Github/validating-binary-decompilation/tests/program_translation_validation/single-source-benchmark/
 sort -R docs/AE_docs/matcherPassList.txt | head -n 10 > /dev/stdout | ../../scripts/run_batch_plv.sh   /dev/stdin |& tee ~/Junk/log
 ```
@@ -280,9 +279,10 @@ Running SIV on an isolated example instruction `addq_r64_r64` involves the follo
 cd ~/Github/validating-binary-decompilation/tests/single_instruction_translation_validation/mcsema/
 echo register-variants/addq_r64_r64 > /tmp/sample.txt
 # Or try one of the following
-#     echo immediate-variants/addq_r64_imm32 > /tmp/sample.txt
-#     echo memory-variants/addq_r64_m64 > /tmp/sample.txt
-#     sort -R docs/AE_docs/non-bugs.txt | head -n 1 > /tmp/sample.txt
+#     echo immediate-variants/addq_r64_imm32 > /tmp/sample.txt        # Try an immediate variant
+#     echo memory-variants/addq_r64_m64 > /tmp/sample.txt             # Try a memory variant
+#     sort -R docs/AE_docs/non-bugs.txt | head -n 1 > /tmp/sample.txt # Try any random instruction from a list
+                                                                      # of passing cases
 
 ../../scripts/run_batch_siv.sh /tmp/sample.txt |& tee ~/Junk/log
 
