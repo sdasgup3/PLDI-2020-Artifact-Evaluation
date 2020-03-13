@@ -406,7 +406,7 @@ make provez3 ## Timeout provides is 24 hrs
 
 ## AutoTuner based normalization
 
-In order to prove that two functions F & F ′ are semantically equivalent, they
+Claim: In order to prove that two functions F & F ′ are semantically equivalent, they
 need to be reduced to isomorphic graphs via normalization. For normalization,
 we initially used a custom sequence of 17 LLVM optimization passes, discovered
 manually by pruning the LLVM -O3 search space. Later experimentation on
