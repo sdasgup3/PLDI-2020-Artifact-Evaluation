@@ -404,7 +404,7 @@ cd ~/Github/validating-binary-decompilation/tests/single_instruction_translation
 make provez3 ## Timeout provides is 24 hrs
 ```
 
-### AutoTuner based normalization
+## AutoTuner based normalization
 
 In order to prove that two functions F & F ′ are semantically equivalent, they
 need to be reduced to isomorphic graphs via normalization. For normalization,
@@ -438,7 +438,7 @@ git checkout pldi20_ae
 git pull origin pldi20_ae
 ```
 
-#### An example auto-tuning run
+### An example auto-tuning run
 Here we will show how the auto-tuner can help discover a pass sequence effective for normalization
 and subsequent matching.
 
