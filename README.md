@@ -225,7 +225,7 @@ echo Inject.1/Rand/ > /dev/stdout | ../../scripts/run_batch_injected_bug_plv.sh 
 ```
 
 **Note**
-The script `../../scripts/run_batch_plv.sh` differs from
+The script `../../scripts/run_batch_injected_bug_plv.sh` differs from
 `../../scripts/run_batch_injected_bug_plv.sh` in having an extra Make target
 `mcsema`. From the [above](https://github.com/sdasgup3/PLDI20-Artifact-Evaluation/blob/master/README.md#testing-arena-for-plv) discussion, this target is used to (1) Invoke IDA +
 McSema to generate `binary/test.mcsema.ll`, and (2) Sanitize the McSema generate
@@ -403,3 +403,73 @@ reasoning about. These cases timed-out (after 24h) reproducibly.
 cd ~/Github/validating-binary-decompilation/tests/single_instruction_translation_validation/mcsema/register-variants/mulq_r64
 make provez3 ## Timeout provides is 24 hrs
 ```
+
+#### AutoTuner based normalization
+
+In order to prove that two functions F & F ′ are semantically equivalent, they
+need to be reduced to isomorphic graphs via normalization. For normalization,
+we initially used a custom sequence of 17 LLVM optimization passes, discovered
+manually by pruning the LLVM -O3 search space. Later experimentation on
+normalizer revealed that (1) changing the order of passes improves the number
+of functions reducing to isomorphic graphs (the pass ordering problem) and thus
+reducing false negatives, and (2) not all of the 17 passes are needed for every
+pair of functions under equivalence check. Such observations intrigues us to
+frame the problem of selecting the best normalizing pass sequence as an
+application of program autotuning.  We used the OpenTuner framework for the
+purpose. The OpenTuner framework requires the user to specify a space to search
+for, which in our case includes the passes from opt -O3 sequence. The framework
+then uses various machine learning techniques to find the best configuration
+which can minimize an objective function within a given resource bud- get. The
+objective function in our case is to maximize the initial potential match set,
+Φ (refer to paper). Such an autotuning-based Normalizer improves the matcher
+results by lowering the false negative rates from 7% to 4%.
+
+In order to make the auto-tuner work, we need the following requirements
+```
+sudo pip install opentuner # password: aecadmin123
+
+cd /home/sdasgup3/Github/validating-binary-decompilation/
+git pull origin pldi20_ae
+
+
+git submodule update --init --recursive
+cd /home/sdasgup3/Github/validating-binary-decompilation/tests/scripts/opentuner
+git checkout pldi20_ae
+git pull origin pldi20_ae
+```
+
+##### An example auto-tuning run
+Here we will show how the auto-tuner can help discover a pass sequence effective for normalization
+and subsequent matching.
+
+```bash
+cd /home/sdasgup3/Github/validating-binary-decompilation/tests/program_translation_validation/single-source-benchmark/Queens/Queens
+make tuner # Invoke the Opentuner and generate a file mcsema/normalizer_final_config.json
+           # containing all the candidate pass sequences which meet the  objective function.
+           # runtime: ~1 min.
+
+unset NORM # Select the candidate pass sequences from  mcsema/normalizer_final_config.json file
+make match # Invoke the matcher on each of the above candidate pass sequences till the matcher succeeds (declare Pass) or
+           # all the candidate pass sequences are exhausted (declare Fail).
+```
+
+The file
+/home/sdasgup3/Github/validating-binary-decompilation/tests/program_translation_validation/single-source-benchmark/docs/reported_stats/7.log
+shows the 65 false-negatives for which the matcher failed because of the the
+pass ordering problem.  Follows the steps to validate that claim: For all the
+functions in the above list, the matcher will `Fail`, when normalized using the
+foxed-length pass sequence.
+
+```bash
+cd /home/sdasgup3/Github/validating-binary-decompilation/tests/program_translation_validation/single-source-benchmark/
+export NORM=CUSTOM
+sort -R docs/reported_stats/7.log | head -n 5 > /dev/stdout |  cat /dev/stdin  | parallel "cd {}; make match ; cd -" |& tee ~/Junk/log
+```
+
+However, if the pass sequence is selected by the auto-tuner, the matcher will succeed in all the cases.
+```bash
+cd /home/sdasgup3/Github/validating-binary-decompilation/tests/program_translation_validation/single-source-benchmark/
+unset NORM
+sort -R docs/reported_stats/7.log | head -n 5 > /dev/stdout |  cat /dev/stdin  | parallel "cd {}; make match ; cd -" |& tee ~/Junk/log
+```
+Note that, for each function, the auto-tuner generated pass sequence is pre-populated at `normalizer_final_config.json`.
