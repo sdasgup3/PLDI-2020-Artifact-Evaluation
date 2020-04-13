@@ -1,5 +1,11 @@
-This file gives the step-by-step instructions on how  to evaluate the artifacts
-for "Scalable Validation of Binary Lifters".
+PLDI 2020 Artifact Evaluation [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3750192.svg)](https://doi.org/10.5281/zenodo.3750192)
+=========================================
+This gives the step-by-step instructions on how to evaluate the artifacts for [1].
+
+[1] Sandeep Dasgupta, Sushant Dinesh, Deepan Venkatesh, Vikram S.  Adve, and
+Christopher W. Fletcher 2020. Scalable Validation of Binary Lifters. In
+Proceedings of the 2020 ACM SIGPLAN Conference on Programming Language Design
+and Implementation. ACM. https://doi.org/10.1145/3385412.3385964
 
 ## Artifact Submission
  - Accepted Paper [pdf](https://github.com/sdasgup3/PLDI-2020-Artifact-Evaluation/blob/master/pldi2020-paper29.pdf)
