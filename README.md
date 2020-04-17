@@ -41,8 +41,8 @@ You should fix the problem as soon as feasible
 ```
 
 # Getting Started
-To check if the installations are working as expected, the reviewers should be able to run the following steps. 
-The steps (detailed in [Step-by-step Instructions](https://github.com/sdasgup3/PLDI20-Artifact-Evaluation/blob/master/README.md#step-by-step-instructions) section) are responsible to run the program-level validation
+To check if the installations is working as expected, the reviewers should be able to run the following steps. 
+The following steps (otherwise detailed in [Step-by-step Instructions](https://github.com/sdasgup3/PLDI20-Artifact-Evaluation/blob/master/README.md#step-by-step-instructions) section) are responsible to run the program-level validation
 on function `Queen::Doit`
 ```
 export NORM=CUSTOM
@@ -50,7 +50,7 @@ cd ~/Github/validating-binary-decompilation/tests/program_translation_validation
 make compd
 make match
 ```
-and expect the following output
+and provide the following output
 ```
 $ export NORM=CUSTOM
 
@@ -71,7 +71,7 @@ Match Pass:both-exact-match:- /home/sdasgup3/Github/validating-binary-decompilat
 ```
 
 # Claims
-The reviewer should be able to 
+The reviewer (or a user) should be able to 
 1. reproduce the program-level validation (PLV) runs on single-source benchmark.
 2. check that PLV is effective in detecting bugs which are artificially injected.
 3. run single-instruction validation pipeline on individual instructions and generate the verification conditions to be dispatched to z3 solver.
