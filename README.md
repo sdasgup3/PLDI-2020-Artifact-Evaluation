@@ -70,7 +70,7 @@ opt -S -mem2reg -licm -gvn -early-cse -globalopt -simplifycfg -basicaa -aa -memd
 Match Pass:both-exact-match:- /home/sdasgup3/Github/validating-binary-decompilation/tests/program_translation_validation/single-source-benchmark/Queens/Doit:Doit
 ```
 
-# Claims
+# Goals
 The reviewer (or a user) should be able to 
 1. reproduce the program-level validation (PLV) runs on single-source benchmark.
 2. check that PLV is effective in detecting bugs which are artificially injected.
@@ -78,12 +78,13 @@ The reviewer (or a user) should be able to
 4. reproduce bugs and timeouts reported in the paper.
 
 # Step-by-step Instructions
-## Program-Level validation (PLV)
-### Source code
 
-The two major components of PLV are [Compositional Lifter](https://github.com/sdasgup3/validating-binary-decompilation/blob/master/source/tools/decompiler/decompiler.cpp), with the core logic defined in [library](https://github.com/sdasgup3/validating-binary-decompilation/blob/master/source/libs/compositional-decompiler/compositional-decompiler.cpp) and [matcher](https://github.com/sdasgup3/validating-binary-decompilation/blob/master/source/tools/matcher/matcher.cpp), with the core logic defined in [library](https://github.com/sdasgup3/validating-binary-decompilation/blob/master/source/libs/llvm-graph-matching/llvm-graph-matching.cpp). Additionally, Compositional Lifter uses a [_Store_](https://github.com/sdasgup3/compd_cache) of formally validated instructions to stitch the validated LLVM IR sequence of constituent instructions in a binary program.
+## Program-Level Validation (PLV)
+### Source Code
 
-### Testing arena for PLV
+The two major components of PLV are (1) [Compositional Lifter](https://github.com/sdasgup3/validating-binary-decompilation/blob/master/source/tools/decompiler/decompiler.cpp), with the core logic defined in [library](https://github.com/sdasgup3/validating-binary-decompilation/blob/master/source/libs/compositional-decompiler/compositional-decompiler.cpp), and (2) [matcher](https://github.com/sdasgup3/validating-binary-decompilation/blob/master/source/tools/matcher/matcher.cpp), with the core logic defined in [library](https://github.com/sdasgup3/validating-binary-decompilation/blob/master/source/libs/llvm-graph-matching/llvm-graph-matching.cpp). Additionally, Compositional Lifter uses a [_Store_](https://github.com/sdasgup3/compd_cache) of formally validated instructions to stitch the validated LLVM IR sequence of constituent instructions of a binary program.
+
+### Testing Arena for PLV
 
 The [test directory](https://github.com/sdasgup3/validating-binary-decompilation/tree/master/tests/program_translation_validation/) contains test-suites like `toy-examples` and `single-source-benchmark`. The [single-source-benchmark](https://github.com/sdasgup3/validating-binary-decompilation/tree/master/tests/program_translation_validation/single-source-benchmark) contain folders for all the programs hosted by the test-suite. Each such program, for example the [Queens program](https://github.com/sdasgup3/validating-binary-decompilation/tree/master/tests/program_translation_validation/single-source-benchmark/Queens), has the following structure:
 
@@ -111,11 +112,11 @@ The [test directory](https://github.com/sdasgup3/validating-binary-decompilation
 
 **Note** 
  1. We have pre-populated the McSema lifted LLVM IR `<program name>/binary/test.mcsema.ll` because McSema needs a licensed disassembler `IDA` to generate this file, which is not provided because of some licensing issues. Hence, the Make target `mcsema` will not work.
- 2. The [_Store_](https://github.com/sdasgup3/compd_cache) has the validated IR sequences of individual binary instructions,  generated using McSema. For similar reasons as above, we have packaged the entire _Store_ in the VM, so that the reviewer do not have to invoke McSema. 
+ 2. The [_Store_](https://github.com/sdasgup3/compd_cache) has the validated IR sequences of individual binary instructions,  generated using McSema. For similar reasons as above, we have packaged the entire _Store_ in the VM, so that the reviewer (or user) do not have to invoke McSema. 
  
 ### Running the PLV pipeline
 
-#### An example run
+#### An Example Run
 Here we will elaborate the process of running PLV on an isolated example function `Queens/Doit/`. 
 We use shell variable NORM to specify which set of optimization passes to use for normalization. For example, the value `CUSTOM` enables using a [set of 17 LLVM opt passes](https://github.com/sdasgup3/validating-binary-decompilation/blob/pldi20_ae/tests/scripts/matcher_driver.sh#L16) for normalization. As as aside, there is an option for NORM which enables AutoTuner for pass selection.
 
@@ -124,8 +125,8 @@ Running PLV on it involves the following steps
 export NORM=CUSTOM
 cd ~/Github/validating-binary-decompilation/tests/program_translation_validation/single-source-benchmark/Queens/Doit/
 
-## Running Mcsema to lift the binary "../binary/test"
-## Creates  "../binary/test.mcsema.inline.ll" (already populated)
+## The step below (i.e., make mcsema) is responsible for running Mcsema to lift the binary "../binary/test"
+## and creating  "../binary/test.mcsema.inline.ll" (already populated)
 # make mcsema // Skip  this step as mentioned above
 
 ## Running Compositional lifter on the corresponding binary ../binary/test.reloc
@@ -144,11 +145,11 @@ make mcsema_opt
 make match # expect "Match Pass" upon execution
 ```
 **Note**
-The Make target `match` already includes the normalization actions of
-`compd_opt` & `mcsema_opt`, hence one can skip invoking the redundant targets.
-The reason we still have those targets are for legacy reasons and included in
-this presentation for better explanation of the steps. For example, instead of
-the above steps one can do
+The Make target `match` already includes the normalization actions
+corresponding to `compd_opt` & `mcsema_opt`, hence one can skip invoking such
+redundant targets.  The reason we still have those targets are for legacy
+reasons and included in this presentation for better explanation of the steps.
+For example, instead of the above steps one can do
 ```
 export NORM=CUSTOM
 cd ~/Github/validating-binary-decompilation/tests/program_translation_validation/single-source-benchmark/Queens/Doit/
@@ -160,7 +161,7 @@ make match
 To demonstrate a batch run, we have included a list of sample functions in a
 list
 `~/Github/validating-binary-decompilation/tests/program_translation_validation/single-source-benchmark/docs/AE_docs/samplePassList.txt`.
-The list also includes function `himenobmtxpa/jacobi`, the biggest function we
+The list includes function `himenobmtxpa/jacobi`, the biggest function we
 tried lifting before submission, wherein the size of the extracted LLVM IR,
       using the Compositional Lifter, is `32105` LOC. Note that, the runtime of the matcher on 
       `himenobmtxpa/jacobi` might take up-to 2 mins.
@@ -195,7 +196,7 @@ We have provided the list of `2189` passing cases
 `~/Github/validating-binary-decompilation/tests/program_translation_validation/single-source-benchmark/docs/AE_docs/matcherPassList.txt`,
   which can be run using either batch mode or individually.
 
-The reviewer is encouraged to pick a random count of entries form the file and invoke the batch run
+The reviewer (or user) is encouraged to pick a random count of entries form the file and invoke the batch run
 ```
 export NORM=CUSTOM
 cd ~/Github/validating-binary-decompilation/tests/program_translation_validation/single-source-benchmark/
@@ -206,11 +207,11 @@ sort -R docs/AE_docs/matcherPassList.txt | head -n 10 > /dev/stdout | ../../scri
 We provided a [list of
 test-cases](https://github.com/sdasgup3/validating-binary-decompilation/blob/master/tests/program_translation_validation/single-source-benchmark/docs/AE_docs/sampleInjectedBugs.txt),
 to demonstrate the effectiveness of PLV to catch potential bugs. The test-cases
-represent the four different category of injections as mentioned in paper (line
-    942) and generated by modifying the McSema-lifted-IR function
-`Queens/Rand`.
+represent the four different category of injections as mentioned in paper
+(Section 6: Evaluation -> Program-level validation: Effectiveness at finding
+ bugs) and generated by modifying the McSema-lifted-IR function `Queens/Rand`.
 
-For example, an example injection can be found at
+An example injection can be found at
 `~/Github/validating-binary-decompilation/tests/program_translation_validation/single-source-benchmark/Inject.1/binary/test.mcsema.ll`,
   where the bug is marked with comment tag `INJECTED_BUG`, along with the original line
   of code marked by tag `ORIG`. This bug is related to choosing a wrong
@@ -241,7 +242,7 @@ McSema lifted file `binary/test.mcsema.ll`. To accomplish this partial
 execution of Make target, we modified the corresponding [Makefile](https://github.com/sdasgup3/validating-binary-decompilation/blob/master/tests/program_translation_validation/single-source-benchmark/Inject.1/Makefile#L31);
 
 ## Single-Instruction validation (SIV)
-### Source code
+### Source Code
 An important component of the SIV is the tool [spec-to-smt](https://github.com/sdasgup3/validating-binary-decompilation/blob/master/source/tools/spec-to-smt/spec-to-smt.cpp), which converts the symbolic summary (specified in K-AST) to SMTLIB queries, with the core functionality defined in [library](https://github.com/sdasgup3/validating-binary-decompilation/blob/master/source/libs/smt-generator/smt-generator.cpp).
 
 ### Testing Arena for SIV
@@ -289,7 +290,6 @@ echo register-variants/addq_r64_r64 > /tmp/sample.txt
 #     echo memory-variants/addq_r64_m64 > /tmp/sample.txt             # Try a memory variant
 #     sort -R docs/AE_docs/non-bugs.txt | head -n 1 > /tmp/sample.txt # Try any random instruction from a list
                                                                       # of passing cases
-
 ../../scripts/run_batch_siv.sh /tmp/sample.txt |& tee ~/Junk/log
 
 # cat ../../scripts/run_batch_siv.sh
@@ -412,7 +412,7 @@ make provez3 ## Timeout provides is 24 hrs
 
 ## AutoTuner based normalization
 
-**Claim**: In order to prove that two functions F & F ′ are semantically equivalent, they
+In order to prove that two functions F & F ′ are semantically equivalent, they
 need to be reduced to isomorphic graphs via normalization. For normalization,
 we initially used a custom sequence of 17 LLVM optimization passes, discovered
 manually by pruning the LLVM -O3 search space. Later experimentation on
@@ -425,23 +425,11 @@ application of program autotuning.  We used the OpenTuner framework for the
 purpose. The OpenTuner framework requires the user to specify a space to search
 for, which in our case includes the passes from opt -O3 sequence. The framework
 then uses various machine learning techniques to find the best configuration
-which can minimize an objective function within a given resource bud- get. The
-objective function in our case is to maximize the initial potential match set,
-Φ (refer to paper). Such an autotuning-based Normalizer improves the matcher
-results by lowering the false negative rates from 7% to 4%.
+which can minimize an objective function within a given resource budget. 
 
-In order to make the auto-tuner work, we need the following requirements
+In order to make the auto-tuner work, following  is the requirement (which is already installed in VM)
 ```
 sudo pip install opentuner # password: aecadmin123
-
-cd /home/sdasgup3/Github/validating-binary-decompilation/
-git pull origin pldi20_ae
-
-
-git submodule update --init --recursive
-cd /home/sdasgup3/Github/validating-binary-decompilation/tests/scripts/opentuner
-git checkout pldi20_ae
-git pull origin pldi20_ae
 ```
 
 ### An example auto-tuning run
@@ -462,9 +450,9 @@ make match # Invoke the matcher on each of the above candidate pass sequences ti
 The file
 /home/sdasgup3/Github/validating-binary-decompilation/tests/program_translation_validation/single-source-benchmark/docs/reported_stats/7.log
 shows the 65 false-negatives for which the matcher failed because of the the
-pass ordering problem.  Follows the steps to validate that claim: For all the
+pass ordering problem.  For all the
 functions in the above list, the matcher will `Fail`, when normalized using the
-foxed-length pass sequence.
+fixed-length (17) pass sequence.
 
 ```bash
 cd /home/sdasgup3/Github/validating-binary-decompilation/tests/program_translation_validation/single-source-benchmark/
