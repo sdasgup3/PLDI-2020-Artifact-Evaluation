@@ -1,5 +1,5 @@
-PLDI 2020 Artifact Evaluation [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3750192.svg)](https://doi.org/10.5281/zenodo.3750192)
-=========================================
+PLDI 2020 Artifact Evaluation
+==============================
 This gives the step-by-step instructions on how to evaluate the artifacts for [1].
 
 [1] Sandeep Dasgupta, Sushant Dinesh, Deepan Venkatesh, Vikram S.  Adve, and
