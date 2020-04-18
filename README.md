@@ -1,4 +1,4 @@
-PLDI 2020 Artifact Evaluation
+PLDI 2020 Artifact Evaluation [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3756283.svg)](https://doi.org/10.5281/zenodo.3756283)
 ==============================
 This gives the step-by-step instructions on how to evaluate the artifacts for [1].
 
